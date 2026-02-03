@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Create google-services.json
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > android/app/google-services.json
+
       - name: Run prebuild
         run: npx expo prebuild --platform android --clean
 
