@@ -41,12 +41,20 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
+      - name: Create gradle.properties override
+        run: |
+          echo "org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError" >> android/gradle.properties
+          echo "org.gradle.daemon=false" >> android/gradle.properties
+          echo "org.gradle.configureondemand=true" >> android/gradle.properties
+          echo "kotlin.incremental=false" >> android/gradle.properties
+
       - name: Build APK
         run: |
           cd android
-          ./gradlew assembleRelease --no-daemon --stacktrace
+          ./gradlew clean assembleRelease --stacktrace --no-daemon --max-workers=2
         env:
           NODE_OPTIONS: '--max-old-space-size=8192'
+          GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:MaxMetaspaceSize=1024m"'
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
