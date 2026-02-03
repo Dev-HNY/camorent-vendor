@@ -1,0 +1,62 @@
+{
+  "cli": {
+    "version": ">= 5.0.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleDebug",
+        "buildType": "apk"
+      },
+      "ios": {
+        "buildConfiguration": "Debug"
+      }
+    },
+    "development-apk": {
+      "distribution": "internal",
+      "env": {
+        "APP_ENV": "development"
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle",
+        "credentialsSource": "remote",
+        "gradleCommand": ":app:bundleRelease",
+        "node": "20.18.1"
+      },
+      "ios": {
+        "buildConfiguration": "Release",
+        "credentialsSource": "remote",
+        "image": "latest",
+        "node": "20.18.1"
+      }
+    },
+    "production-apk": {
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "./google-play-service-account.json",
+        "track": "internal"
+      }
+    }
+  }
+}

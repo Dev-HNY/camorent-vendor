@@ -5,6 +5,7 @@
 
 import React from 'react';
 import { View, Image, StyleSheet, Dimensions } from 'react-native';
+import Animated, { ZoomIn } from 'react-native-reanimated';
 import { theme } from '../../theme';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -30,7 +31,8 @@ export const ImageCollage: React.FC = () => {
   return (
     <View style={[styles.container, { height: containerHeight }]}>
       {/* Top Left - Side 1 */}
-      <View
+      <Animated.View
+        entering={ZoomIn.delay(100).springify().damping(12)}
         style={[
           styles.imageWrapper,
           {
@@ -43,10 +45,11 @@ export const ImageCollage: React.FC = () => {
         ]}
       >
         <Image source={IMAGES.side1} style={styles.image} />
-      </View>
+      </Animated.View>
 
       {/* Top Right - Side 2 */}
-      <View
+      <Animated.View
+        entering={ZoomIn.delay(200).springify().damping(12)}
         style={[
           styles.imageWrapper,
           {
@@ -59,10 +62,11 @@ export const ImageCollage: React.FC = () => {
         ]}
       >
         <Image source={IMAGES.side2} style={styles.image} />
-      </View>
+      </Animated.View>
 
       {/* Center - Main image (center.png) */}
-      <View
+      <Animated.View
+        entering={ZoomIn.delay(400).springify().damping(10)}
         style={[
           styles.imageWrapper,
           {
@@ -75,10 +79,11 @@ export const ImageCollage: React.FC = () => {
         ]}
       >
         <Image source={IMAGES.center} style={styles.image} />
-      </View>
+      </Animated.View>
 
       {/* Bottom Left - Side 3 */}
-      <View
+      <Animated.View
+        entering={ZoomIn.delay(300).springify().damping(12)}
         style={[
           styles.imageWrapper,
           {
@@ -91,10 +96,11 @@ export const ImageCollage: React.FC = () => {
         ]}
       >
         <Image source={IMAGES.side3} style={styles.image} />
-      </View>
+      </Animated.View>
 
       {/* Bottom Right - Side 4 */}
-      <View
+      <Animated.View
+        entering={ZoomIn.delay(500).springify().damping(12)}
         style={[
           styles.imageWrapper,
           {
@@ -107,7 +113,7 @@ export const ImageCollage: React.FC = () => {
         ]}
       >
         <Image source={IMAGES.side4} style={styles.image} />
-      </View>
+      </Animated.View>
     </View>
   );
 };

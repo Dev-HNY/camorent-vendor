@@ -1,0 +1,77 @@
+name: Build Android APK/AAB
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build type'
+        required: true
+        default: 'apk'
+        type: choice
+        options:
+          - apk
+          - aab
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.18.1'
+          cache: 'npm'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run prebuild
+        run: npx expo prebuild --platform android --clean
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build APK
+        if: github.event.inputs.build_type == 'apk'
+        run: |
+          cd android
+          ./gradlew assembleRelease --no-daemon --stacktrace
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
+      - name: Build AAB
+        if: github.event.inputs.build_type == 'aab'
+        run: |
+          cd android
+          ./gradlew bundleRelease --no-daemon --stacktrace
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
+      - name: Upload APK artifact
+        if: github.event.inputs.build_type == 'apk'
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 30
+
+      - name: Upload AAB artifact
+        if: github.event.inputs.build_type == 'aab'
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30

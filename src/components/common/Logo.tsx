@@ -1,56 +1,117 @@
 /**
  * Logo Component
- * Camorent brand logo with customizable size
+ * Camorent brand logo with industry-grade popping animation (Airbnb/Apple style)
  */
 
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { theme } from '../../theme';
+import React, { useEffect } from 'react';
+import { StyleSheet, View, Platform } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withSpring,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 import { LogoProps } from '../../types';
 
 export const Logo: React.FC<LogoProps> = ({ size = 80 }) => {
+  const scale = useSharedValue(1);
+  const shadowOpacity = useSharedValue(0.15);
+
+  useEffect(() => {
+    // Popping scale animation with spring physics (like Airbnb/Apple)
+    scale.value = withRepeat(
+      withSequence(
+        withSpring(1.15, {
+          damping: 8,
+          stiffness: 200,
+          mass: 0.5,
+        }),
+        withSpring(1, {
+          damping: 12,
+          stiffness: 250,
+          mass: 0.5,
+        })
+      ),
+      -1, // Infinite repeat
+      false
+    );
+
+    // Subtle shadow pulse synchronized with scale
+    shadowOpacity.value = withRepeat(
+      withSequence(
+        withTiming(0.3, {
+          duration: 600,
+          easing: Easing.out(Easing.ease),
+        }),
+        withTiming(0.15, {
+          duration: 600,
+          easing: Easing.in(Easing.ease),
+        })
+      ),
+      -1,
+      false
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const shadowStyle = useAnimatedStyle(() => ({
+    shadowOpacity: shadowOpacity.value,
+  }));
+
   return (
-    <View style={[styles.container, { width: size, height: size }]}>
-      <View style={[styles.circle, { width: size, height: size, borderRadius: size / 2 }]}>
-        {/* Inner design - representing camera lens/shutter */}
-        <View style={[styles.innerCircle, { 
-          width: size * 0.7, 
-          height: size * 0.7, 
-          borderRadius: (size * 0.7) / 2 
-        }]}>
-          <View style={[styles.arc, { 
-            width: size * 0.5, 
-            height: size * 0.5,
-            borderRadius: (size * 0.5) / 2,
-            borderWidth: size * 0.08,
-          }]} />
-        </View>
-      </View>
+    <View style={styles.container}>
+      <Animated.View
+        style={[
+          styles.shadowContainer,
+          {
+            width: size,
+            height: size,
+            shadowColor: '#565CAA',
+            shadowOffset: { width: 0, height: 8 },
+            shadowRadius: 16,
+            elevation: 12,
+          },
+          shadowStyle,
+        ]}
+      >
+        <Animated.Image
+          source={require('../../../assets/icon-blue.png')}
+          style={[
+            styles.logo,
+            { width: size, height: size },
+            animatedStyle,
+          ]}
+          resizeMode="contain"
+        />
+      </Animated.View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    alignSelf: 'center',
     alignItems: 'center',
-  },
-  circle: {
-    backgroundColor: theme.colors.primary,
     justifyContent: 'center',
-    alignItems: 'center',
-    ...theme.shadows.md,
   },
-  innerCircle: {
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    alignItems: 'center',
+  shadowContainer: {
+    borderRadius: 1000, // Large radius for circular shadow
+    ...Platform.select({
+      ios: {
+        shadowColor: '#565CAA',
+      },
+      android: {
+        elevation: 12,
+      },
+    }),
   },
-  arc: {
-    backgroundColor: 'transparent',
-    borderColor: theme.colors.text.inverse,
-    borderTopWidth: 0,
-    borderRightWidth: 0,
-    transform: [{ rotate: '135deg' }],
+  logo: {
+    alignSelf: 'center',
   },
 });

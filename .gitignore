@@ -31,3 +31,36 @@ logs/
 # Build
 build/
 *.tgz
+
+# Play Store
+*.keystore
+*.jks
+keystore.properties
+google-play-service-account.json
+
+# APK/AAB
+*.apk
+*.aab
+
+# Android
+android/app/build/
+android/.gradle/
+
+# iOS
+ios/Pods/
+ios/build/
+
+# EAS
+.eas/
+
+# Temporary files
+temp_*.txt
+*.tmp
+.tmp/
+
+# Cleanup scripts output
+/tmp/
+
+# Editor backup files
+*.bak
+*~

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "624835549236",
+    "project_id": "camorent-vendor-a15f3",
+    "storage_bucket": "camorent-vendor-a15f3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:624835549236:android:8f2781085f167195171261",
+        "android_client_info": {
+          "package_name": "com.camorentvendor.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXn6eFtWDSLbx6J6BCL24zMNecF5doL5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

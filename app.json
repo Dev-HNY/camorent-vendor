@@ -1,32 +1,100 @@
 {
   "expo": {
-    "name": "Camorent",
-    "slug": "camorent-app",
+    "name": "Camorent Vendor",
+    "slug": "camorent-vendor",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./assets/icon-blue.png",
+    "userInterfaceStyle": "automatic",
+    "scheme": "camorent",
+    "privacy": "unlisted",
     "splash": {
-      "image": "./assets/icon.png",
+      "image": "./assets/icon-blue.png",
       "resizeMode": "contain",
-      "backgroundColor": "#701AD3"
+      "backgroundColor": "#565caa"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app needs access to your photos to upload product and challan images.",
+          "cameraPermission": "The app needs access to your camera to scan products and challan documents."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon-blue.png",
+          "color": "#565caa",
+          "mode": "production"
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0",
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": false,
+            "newArchEnabled": false,
+            "enableMinifyInReleaseBuilds": true
+          }
+        }
+      ]
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.camorent.app"
+      "bundleIdentifier": "com.camorentvendor.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSCameraUsageDescription": "The app needs access to your camera to scan products and challan documents.",
+        "NSPhotoLibraryUsageDescription": "The app needs access to your photos to upload product and challan images.",
+        "NSPhotoLibraryAddUsageDescription": "The app needs permission to save photos to your library."
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
-        "backgroundColor": "#701AD3"
+        "foregroundImage": "./assets/icon-blue.png",
+        "backgroundColor": "#565caa"
       },
-      "package": "com.camorent.app"
+      "package": "com.camorentvendor.app",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.VIBRATE",
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true,
+      "blockedPermissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
+      ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "ac22ea6e-7dea-48f9-a299-f1585af117aa"
+      }
     }
   }
 }
