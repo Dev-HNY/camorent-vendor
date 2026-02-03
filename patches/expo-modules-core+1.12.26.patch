@@ -1,0 +1,13 @@
+diff --git a/node_modules/expo-modules-core/android/src/main/java/expo/modules/adapters/react/permissions/PermissionsService.kt b/node_modules/expo-modules-core/android/src/main/java/expo/modules/adapters/react/permissions/PermissionsService.kt
+index 0000000..1111111 100644
+--- a/node_modules/expo-modules-core/android/src/main/java/expo/modules/adapters/react/permissions/PermissionsService.kt
++++ b/node_modules/expo-modules-core/android/src/main/java/expo/modules/adapters/react/permissions/PermissionsService.kt
+@@ -163,7 +163,7 @@ open class PermissionsService(context: Context) : InternalModule, PermissionsIn
+       GlobalScope.launch(Dispatchers.Main) {
+         try {
+           val activity = currentActivity.await()
+-          activity.requestPermissions(permissions, PERMISSIONS_REQUEST_CODE)
++          activity.requestPermissions(permissions ?: emptyArray(), PERMISSIONS_REQUEST_CODE)
+         } catch (e: Exception) {
+           onRequestPermissionsResult(
+             IntArray(0),
