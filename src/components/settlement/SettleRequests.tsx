@@ -12,7 +12,6 @@ import {
   TouchableOpacity,
   RefreshControl,
   ActivityIndicator,
-  Alert,
   Image,
   Modal,
   TextInput,
@@ -31,6 +30,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useTranslation } from '../../context/LanguageContext';
 import { paymentSettlementService, Settlement } from '../../services/api/paymentSettlementService';
 import { useNotification } from '../../context/NotificationContext';
+import { SuccessModal } from '../common/SuccessModal';
 
 type ApprovalFilterType = 'pending' | 'all';
 
@@ -89,6 +89,12 @@ export default function SettleRequests() {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
   const { setPendingSettlementsCount } = useNotification();
+  const [showApprovalConfirmModal, setShowApprovalConfirmModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalIcon, setModalIcon] = useState<'success' | 'error' | 'warning' | 'info'>('success');
 
   useEffect(() => {
     loadData();
@@ -115,7 +121,10 @@ export default function SettleRequests() {
         setSettlements(response.data.settlements);
       }
     } catch (error: any) {
-      Alert.alert(t.common.error, error.message || t.settlement.failedToLoadSettlements);
+      setModalTitle(t.common.error);
+      setModalMessage(error.message || t.settlement.failedToLoadSettlements);
+      setModalIcon('error');
+      setShowErrorModal(true);
     } finally {
       setLoading(false);
     }
@@ -133,44 +142,49 @@ export default function SettleRequests() {
     setShowDetailModal(true);
   };
 
-  const handleApprove = async () => {
+  const handleApprove = () => {
+    if (!selectedSettlement) return;
+    setShowApprovalConfirmModal(true);
+  };
+
+  const handleConfirmApprove = async () => {
     if (!selectedSettlement) return;
 
-    Alert.alert(
-      t.settlement.confirmApproval,
-      t.settlement.confirmApprovalMessage.replace('{amount}', selectedSettlement.amount.toLocaleString()),
-      [
-        { text: t.common.cancel, style: 'cancel' },
-        {
-          text: t.buttons.approve,
-          style: 'default',
-          onPress: async () => {
-            try {
-              const response = await paymentSettlementService.reviewSettlement(
-                selectedSettlement.settlement_id,
-                { action: 'approve' }
-              );
+    setShowApprovalConfirmModal(false);
+    try {
+      const response = await paymentSettlementService.reviewSettlement(
+        selectedSettlement.settlement_id,
+        { action: 'approve' }
+      );
 
-              if (response.success) {
-                Alert.alert(t.common.success, t.settlement.approvalSuccess);
-                setShowDetailModal(false);
-                await loadData();
-                await loadPendingCount(); // Update badge count
-              } else {
-                Alert.alert(t.common.error, response.error || t.settlement.approvalError);
-              }
-            } catch (error: any) {
-              Alert.alert(t.common.error, error.message || t.settlement.approvalError);
-            }
-          },
-        },
-      ]
-    );
+      if (response.success) {
+        setModalTitle(t.common.success);
+        setModalMessage(t.settlement.approvalSuccess);
+        setModalIcon('success');
+        setShowSuccessModal(true);
+        setShowDetailModal(false);
+        await loadData();
+        await loadPendingCount(); // Update badge count
+      } else {
+        setModalTitle(t.common.error);
+        setModalMessage(response.error || t.settlement.approvalError);
+        setModalIcon('error');
+        setShowErrorModal(true);
+      }
+    } catch (error: any) {
+      setModalTitle(t.common.error);
+      setModalMessage(error.message || t.settlement.approvalError);
+      setModalIcon('error');
+      setShowErrorModal(true);
+    }
   };
 
   const handleReject = async () => {
     if (!selectedSettlement || !rejectionReason.trim()) {
-      Alert.alert(t.common.error, t.settlement.provideRejectionReason);
+      setModalTitle(t.common.error);
+      setModalMessage(t.settlement.provideRejectionReason);
+      setModalIcon('error');
+      setShowErrorModal(true);
       return;
     }
 
@@ -181,17 +195,26 @@ export default function SettleRequests() {
       );
 
       if (response.success) {
-        Alert.alert(t.common.success, t.settlement.rejectSuccess);
+        setModalTitle(t.common.success);
+        setModalMessage(t.settlement.rejectSuccess);
+        setModalIcon('success');
+        setShowSuccessModal(true);
         setShowRejectModal(false);
         setShowDetailModal(false);
         setRejectionReason('');
         await loadData();
         await loadPendingCount(); // Update badge count
       } else {
-        Alert.alert(t.common.error, response.error || t.settlement.failedToRejectSettlement);
+        setModalTitle(t.common.error);
+        setModalMessage(response.error || t.settlement.failedToRejectSettlement);
+        setModalIcon('error');
+        setShowErrorModal(true);
       }
     } catch (error: any) {
-      Alert.alert(t.common.error, error.message || t.settlement.failedToRejectSettlement);
+      setModalTitle(t.common.error);
+      setModalMessage(error.message || t.settlement.failedToRejectSettlement);
+      setModalIcon('error');
+      setShowErrorModal(true);
     }
   };
 
@@ -671,6 +694,41 @@ export default function SettleRequests() {
           </View>
         </View>
       </Modal>
+
+      {/* Approval Confirmation Modal */}
+      <SuccessModal
+        visible={showApprovalConfirmModal}
+        onClose={() => setShowApprovalConfirmModal(false)}
+        title={t.settlement.confirmApproval}
+        message={selectedSettlement ? t.settlement.confirmApprovalMessage.replace('{amount}', selectedSettlement.amount.toLocaleString()) : ''}
+        primaryButtonText={t.buttons.approve}
+        secondaryButtonText={t.common.cancel}
+        onPrimaryPress={handleConfirmApprove}
+        onSecondaryPress={() => setShowApprovalConfirmModal(false)}
+        icon="warning"
+      />
+
+      {/* Success Modal */}
+      <SuccessModal
+        visible={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title={modalTitle}
+        message={modalMessage}
+        primaryButtonText="OK"
+        onPrimaryPress={() => setShowSuccessModal(false)}
+        icon={modalIcon}
+      />
+
+      {/* Error Modal */}
+      <SuccessModal
+        visible={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        title={modalTitle}
+        message={modalMessage}
+        primaryButtonText="OK"
+        onPrimaryPress={() => setShowErrorModal(false)}
+        icon="error"
+      />
     </View>
   );
 }
@@ -710,7 +768,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 16,
-    paddingBottom: 120, // Extra space for floating tab bar + Android navigation bar
+    paddingBottom: 140, // Extra space for floating tab bar + Android navigation bar (increased for better clearance)
   },
   settlementCard: {
     borderRadius: 12,

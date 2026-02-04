@@ -1044,6 +1044,7 @@ const styles = StyleSheet.create({
     gap: 12,
     marginHorizontal: 16,
     marginTop: 8,
+    marginBottom: Platform.OS === 'android' ? 40 : 16,
   },
   approveButton: {
     flexDirection: 'row',

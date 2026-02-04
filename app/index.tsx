@@ -500,7 +500,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   footer: {
-    paddingBottom: Platform.OS === 'android' ? 20 : 10,
+    paddingBottom: Platform.OS === 'android' ? 40 : 10,
     paddingTop: 12,
   },
   getStartedButton: {
