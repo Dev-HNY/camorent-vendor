@@ -41,6 +41,13 @@ gradle.properties
 !gradle.properties.example
 keystore.txt
 
+# App Store
+app-store-connect-api-key.json
+*.p8
+*.mobileprovision
+*.cer
+*.p12
+
 # APK/AAB
 *.apk
 *.aab
