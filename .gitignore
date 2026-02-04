@@ -37,6 +37,9 @@ build/
 *.jks
 keystore.properties
 google-play-service-account.json
+gradle.properties
+!gradle.properties.example
+keystore.txt
 
 # APK/AAB
 *.apk

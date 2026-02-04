@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Android APK & AAB
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build Android APK
+    name: Build Android APK & AAB
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -38,12 +38,38 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
+      - name: Decode keystore
+        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > android/app/camorent-upload-key.keystore
+            echo "✅ Keystore decoded successfully"
+          else
+            echo "⚠️ KEYSTORE_BASE64 secret not found - builds will use debug signing"
+          fi
+
       - name: Create gradle.properties override
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           echo "org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError" >> android/gradle.properties
           echo "org.gradle.daemon=false" >> android/gradle.properties
           echo "org.gradle.configureondemand=true" >> android/gradle.properties
           echo "kotlin.incremental=false" >> android/gradle.properties
+
+          if [ -n "$KEYSTORE_PASSWORD" ] && [ -n "$KEY_ALIAS" ] && [ -n "$KEY_PASSWORD" ]; then
+            echo "CAMORENT_UPLOAD_STORE_FILE=camorent-upload-key.keystore" >> android/gradle.properties
+            echo "CAMORENT_UPLOAD_KEY_ALIAS=$KEY_ALIAS" >> android/gradle.properties
+            echo "CAMORENT_UPLOAD_STORE_PASSWORD=$KEYSTORE_PASSWORD" >> android/gradle.properties
+            echo "CAMORENT_UPLOAD_KEY_PASSWORD=$KEY_PASSWORD" >> android/gradle.properties
+            echo "✅ Release signing configured"
+          else
+            echo "⚠️ Signing secrets not found - using debug signing"
+          fi
 
       - name: Build APK
         run: |
@@ -53,9 +79,24 @@ jobs:
           NODE_OPTIONS: '--max-old-space-size=8192'
           GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:MaxMetaspaceSize=1024m"'
 
+      - name: Build AAB (Android App Bundle)
+        run: |
+          cd android
+          ./gradlew bundleRelease --stacktrace --no-daemon --max-workers=2
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+          GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:MaxMetaspaceSize=1024m"'
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
           path: android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 30
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: android/app/build/outputs/bundle/release/app-release.aab
           retention-days: 30
