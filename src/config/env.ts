@@ -62,7 +62,7 @@ const ENV_CONFIG = {
   production: {
     // Production environment - MUST be updated before Play Store release
     // TODO: Replace with your actual production API URL
-    API_BASE_URL:  'api.camorent.co.in',
+    API_BASE_URL:  'https://resplendent-chronometric-bridgett.ngrok-free.dev',
     API_TIMEOUT: 30000,
     ENABLE_LOGGING: false,
     ENABLE_CRASHLYTICS: true,
