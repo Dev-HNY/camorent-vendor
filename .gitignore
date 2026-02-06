@@ -34,11 +34,11 @@ build/
 
 # Play Store
 *.keystore
+!android/app/camorent-upload-key.keystore
 *.jks
 keystore.properties
 google-play-service-account.json
-gradle.properties
-!gradle.properties.example
+!android/gradle.properties
 keystore.txt
 
 # App Store

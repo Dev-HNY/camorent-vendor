@@ -138,8 +138,8 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            // Use release signing config if available, otherwise fall back to debug (for local dev)
-            signingConfig signingConfigs.release ?: signingConfigs.debug
+            // Always use release signing for production builds
+            signingConfig signingConfigs.release
             shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"

@@ -47,37 +47,23 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      - name: Decode keystore
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+      - name: Verify keystore exists
         run: |
-          if [ -n "$KEYSTORE_BASE64" ]; then
-            echo "$KEYSTORE_BASE64" | base64 -d > android/app/camorent-upload-key.keystore
-            echo "✅ Keystore decoded successfully"
+          if [ -f "android/app/camorent-upload-key.keystore" ]; then
+            echo "✅ Keystore found"
+            ls -lh android/app/camorent-upload-key.keystore
           else
-            echo "⚠️ KEYSTORE_BASE64 secret not found - builds will use debug signing"
+            echo "❌ Keystore not found!"
+            exit 1
           fi
 
-      - name: Create gradle.properties override
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Configure Gradle for CI
         run: |
           echo "org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError" >> android/gradle.properties
           echo "org.gradle.daemon=false" >> android/gradle.properties
           echo "org.gradle.configureondemand=true" >> android/gradle.properties
           echo "kotlin.incremental=false" >> android/gradle.properties
-
-          if [ -n "$KEYSTORE_PASSWORD" ] && [ -n "$KEY_ALIAS" ] && [ -n "$KEY_PASSWORD" ]; then
-            echo "CAMORENT_UPLOAD_STORE_FILE=camorent-upload-key.keystore" >> android/gradle.properties
-            echo "CAMORENT_UPLOAD_KEY_ALIAS=$KEY_ALIAS" >> android/gradle.properties
-            echo "CAMORENT_UPLOAD_STORE_PASSWORD=$KEYSTORE_PASSWORD" >> android/gradle.properties
-            echo "CAMORENT_UPLOAD_KEY_PASSWORD=$KEY_PASSWORD" >> android/gradle.properties
-            echo "✅ Release signing configured"
-          else
-            echo "⚠️ Signing secrets not found - using debug signing"
-          fi
+          echo "✅ Gradle CI configuration added"
 
       - name: Build APK
         if: github.event.inputs.build_type == 'apk'
