@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '../src/components/common/Button';
 import { useTheme } from '../src/context/ThemeContext';
 import { useTranslation } from '../src/context/LanguageContext';
@@ -73,6 +74,7 @@ export default function AddressSetupScreen() {
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
   const updateUserProfile = useUserStore((state) => state.updateUserProfile);
+  const insets = useSafeAreaInsets();
 
   // Form state
   const [addressLine1, setAddressLine1] = useState('');
@@ -229,7 +231,7 @@ export default function AddressSetupScreen() {
       />
 
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: 100 + insets.bottom }]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
@@ -519,7 +521,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
-    paddingBottom: 40,
   },
   header: {
     marginBottom: 30,

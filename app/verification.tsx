@@ -20,6 +20,7 @@ import {
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import Svg, { Path, Circle } from 'react-native-svg';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from '../src/components/common/Button';
 import { useTheme } from '../src/context/ThemeContext';
 import { useTranslation } from '../src/context/LanguageContext';
@@ -58,6 +59,7 @@ export default function VerificationScreen() {
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
   const { updateUserProfile } = useUserStore();
+  const insets = useSafeAreaInsets();
 
   // Form state
   const [gstNo, setGstNo] = useState('');
@@ -194,7 +196,7 @@ export default function VerificationScreen() {
       />
 
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: 100 + insets.bottom }]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
@@ -320,7 +322,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
-    paddingBottom: 40,
   },
   header: {
     marginBottom: 30,

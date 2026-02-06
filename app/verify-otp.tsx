@@ -20,6 +20,7 @@ import {
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Svg, { Path, Circle } from 'react-native-svg';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { bookingService } from '../src/services/api/bookingService';
 import { scaleWidth, scaleHeight, spacing, fontSize } from '../src/utils/responsive';
 import { useTheme } from '../src/context/ThemeContext';
@@ -52,6 +53,7 @@ export default function VerifyOTPScreen() {
   const params = useLocalSearchParams();
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const bookingId = params.bookingId as string;
   const orderName = params.orderName as string;
 
@@ -166,7 +168,7 @@ export default function VerifyOTPScreen() {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardView}>
         <ScrollView
           style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[styles.scrollContent, { paddingBottom: 100 + insets.bottom }]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
@@ -282,7 +284,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
   },
   infoCard: {
     padding: spacing.xl,

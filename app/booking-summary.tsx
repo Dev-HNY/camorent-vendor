@@ -17,6 +17,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../src/context/ThemeContext';
 import { useTranslation } from '../src/context/LanguageContext';
 import { useOrderStore } from '../src/store/orderStore';
@@ -29,6 +30,7 @@ export default function BookingSummaryScreen() {
   const params = useLocalSearchParams();
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
 
   const orderName = params.orderName as string || t.bookingSummary.new_order;
   const startDate = params.startDate as string;
@@ -256,7 +258,7 @@ export default function BookingSummaryScreen() {
       </ScrollView>
 
       {/* Bottom Action Bar */}
-      <View style={[styles.bottomBar, { backgroundColor: theme.colors.background.primary, borderTopColor: theme.colors.border.light }]}>
+      <View style={[styles.bottomBar, { backgroundColor: theme.colors.background.primary, borderTopColor: theme.colors.border.light, paddingBottom: insets.bottom + 20 }]}>
         <View style={styles.bottomInfo}>
           <Text style={[styles.bottomLabel, { color: theme.colors.text.secondary }]}>{t.bookingSummary.total_amount_label}</Text>
           <Text style={[styles.bottomValue, { color: theme.colors.text.primary }]}>₹{calculateTotalAmount()}</Text>

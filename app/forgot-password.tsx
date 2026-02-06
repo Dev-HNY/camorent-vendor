@@ -20,6 +20,7 @@ import {
 import { useRouter } from 'expo-router';
 import Svg, { Path, Circle } from 'react-native-svg';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../src/context/ThemeContext';
 import { useTranslation } from '../src/context/LanguageContext';
 import { SuccessModal, ScreenHeader } from '../src/components';
@@ -51,6 +52,7 @@ export default function ForgotPasswordScreen() {
   const router = useRouter();
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -111,7 +113,7 @@ export default function ForgotPasswordScreen() {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.keyboardView}>
         <ScrollView
           style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[styles.scrollContent, { paddingBottom: 100 + insets.bottom }]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
@@ -228,7 +230,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 40,
-    paddingBottom: 40,
   },
   iconContainer: {
     width: 120,

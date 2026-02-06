@@ -20,6 +20,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import LottieView from 'lottie-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../src/context/ThemeContext';
 import { useTranslation } from '../src/context/LanguageContext';
 import { bookingService, BookingDetailResponse } from '../src/services/api/bookingService';
@@ -30,6 +31,7 @@ export default function ReturnScanProductScreen() {
   const params = useLocalSearchParams();
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const bookingId = params.bookingId as string;
   const orderName = params.orderName as string;
 
@@ -167,7 +169,7 @@ export default function ReturnScanProductScreen() {
 
       <ScrollView
         style={[styles.scrollView, { backgroundColor: theme.colors.background.secondary }]}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: 100 + insets.bottom }]}
       >
         {/* Lottie Animation - Step 6 */}
         <View style={styles.lottieHeaderContainer}>
@@ -243,7 +245,7 @@ export default function ReturnScanProductScreen() {
       </ScrollView>
 
       {/* Next Button */}
-      <View style={[styles.footer, { backgroundColor: theme.colors.background.primary }]}>
+      <View style={[styles.footer, { backgroundColor: theme.colors.background.primary, paddingBottom: insets.bottom + 20 }]}>
         <TouchableOpacity
           style={[
             styles.nextButton,
@@ -301,7 +303,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 24,
     paddingTop: 24,
-    paddingBottom: 40,
   },
   lottieHeaderContainer: {
     alignItems: 'center',
@@ -427,8 +428,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 24,
-    paddingVertical: 16,
-    paddingBottom: Platform.OS === 'android' ? 16 : 32,
+    paddingTop: 16,
   },
   nextButton: {
     flexDirection: 'row',

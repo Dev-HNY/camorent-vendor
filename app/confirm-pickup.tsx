@@ -16,6 +16,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { bookingService, VendorBookingListItem } from '../src/services/api/bookingService';
 import { Logo, ScreenHeader } from '../src/components';
 import { useTheme } from '../src/context/ThemeContext';
@@ -26,6 +27,7 @@ export default function ConfirmPickupScreen() {
   const params = useLocalSearchParams();
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const preSelectedBookingId = params.bookingId as string | undefined;
 
   const [bookings, setBookings] = useState<VendorBookingListItem[]>([]);
@@ -113,7 +115,7 @@ export default function ConfirmPickupScreen() {
       {/* Header */}
       <ScreenHeader title={t.confirmPickup.title} />
 
-      <ScrollView style={[styles.scrollView, { backgroundColor: theme.colors.background.secondary }]} contentContainerStyle={styles.scrollContent}>
+      <ScrollView style={[styles.scrollView, { backgroundColor: theme.colors.background.secondary }]} contentContainerStyle={[styles.scrollContent, { paddingBottom: 100 + insets.bottom }]}>
         {/* Logo */}
         <View style={styles.logoContainer}>
           <Logo size={100} />
@@ -207,7 +209,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   logoContainer: {
     alignItems: 'center',

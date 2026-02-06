@@ -60,9 +60,11 @@ git push origin main
 
 ### How It Works
 1. Keystore is committed to repo
-2. GitHub Actions reads it automatically
-3. gradle.properties has passwords (committed)
-4. Build is signed with release key
+2. GitHub Actions backs up keystore before prebuild
+3. Expo prebuild regenerates android folder (--clean)
+4. GitHub Actions restores keystore to android/app
+5. gradle.properties has passwords (committed)
+6. Build is signed with release key
 
 ---
 

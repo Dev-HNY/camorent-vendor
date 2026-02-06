@@ -35,21 +35,27 @@ jobs:
       - name: TypeScript check
         run: npx tsc --noEmit --skipLibCheck
 
+      - name: Backup keystore before prebuild
+        run: |
+          if [ -f "android/app/camorent-upload-key.keystore" ]; then
+            cp android/app/camorent-upload-key.keystore /tmp/camorent-upload-key.keystore
+            echo "✅ Keystore backed up"
+          else
+            echo "❌ Keystore not found in repo!"
+            exit 1
+          fi
+
       - name: Run prebuild
         run: npx expo prebuild --platform android --clean
 
+      - name: Restore keystore after prebuild
+        run: |
+          cp /tmp/camorent-upload-key.keystore android/app/camorent-upload-key.keystore
+          echo "✅ Keystore restored"
+          ls -lh android/app/camorent-upload-key.keystore
+
       - name: Make gradlew executable
         run: chmod +x android/gradlew
-
-      - name: Verify keystore exists
-        run: |
-          if [ -f "android/app/camorent-upload-key.keystore" ]; then
-            echo "✅ Keystore found"
-            ls -lh android/app/camorent-upload-key.keystore
-          else
-            echo "❌ Keystore not found!"
-            exit 1
-          fi
 
       - name: Configure Gradle for CI
         run: |

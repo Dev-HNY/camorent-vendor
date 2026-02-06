@@ -23,6 +23,7 @@ import { useRouter } from 'expo-router';
 import Animated, { FadeInDown, FadeIn, SlideInRight } from 'react-native-reanimated';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Logo } from '../src/components/common/Logo';
 import { ImageCollage } from '../src/components/onboarding/ImageCollage';
 import { useTheme } from '../src/context/ThemeContext';
@@ -75,6 +76,7 @@ export default function WelcomeScreen() {
   const { theme, themeMode, toggleTheme } = useTheme();
   const { language, setLanguage, t } = useLanguage();
   const { user, setUserProfile } = useUserStore();
+  const insets = useSafeAreaInsets();
   const [showPreferences, setShowPreferences] = useState(false);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [showThemeModal, setShowThemeModal] = useState(false);
@@ -275,7 +277,7 @@ export default function WelcomeScreen() {
         </Animated.View>
 
         {/* Footer Section with CTA */}
-        <Animated.View entering={FadeInDown.delay(500).duration(600)} style={styles.footer}>
+        <Animated.View entering={FadeInDown.delay(500).duration(600)} style={[styles.footer, { paddingBottom: insets.bottom + 20 }]}>
           <TouchableOpacity
             onPress={handleGetStarted}
             activeOpacity={0.9}
@@ -500,7 +502,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   footer: {
-    paddingBottom: Platform.OS === 'android' ? 40 : 10,
     paddingTop: 12,
   },
   getStartedButton: {

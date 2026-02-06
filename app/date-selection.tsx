@@ -26,6 +26,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../src/context/ThemeContext';
 import { useTranslation } from '../src/context/LanguageContext';
 import { useOrderStore } from '../src/store/orderStore';
@@ -95,6 +96,7 @@ export default function DateSelectionScreen() {
   const params = useLocalSearchParams();
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const orderName = params.orderName as string || 'New Order';
   const setRentalDates = useOrderStore((state) => state.setRentalDates);
 
@@ -402,7 +404,7 @@ export default function DateSelectionScreen() {
       {/* Bottom Actions */}
       <Animated.View
         entering={FadeInUp.delay(250).duration(400)}
-        style={[styles.bottomActions, { backgroundColor: theme.colors.background.secondary }]}
+        style={[styles.bottomActions, { backgroundColor: theme.colors.background.secondary, paddingBottom: insets.bottom + 20 }]}
       >
         <TouchableOpacity style={styles.clearButton} onPress={handleClear}>
           <XIcon color={theme.colors.text.secondary} size={18} />
@@ -594,7 +596,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 16,
     borderTopWidth: 1,
     borderTopColor: 'rgba(0,0,0,0.05)',
     shadowColor: '#000',

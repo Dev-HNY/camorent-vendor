@@ -17,6 +17,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import LottieView from 'lottie-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../src/context/ThemeContext';
 import { useTranslation } from '../src/context/LanguageContext';
 import { CameraIcon, GalleryIcon, SuccessModal, ScreenHeader } from '../src/components';
@@ -26,6 +27,7 @@ export default function ScanChallanScreen() {
   const params = useLocalSearchParams();
   const { theme, themeMode } = useTheme();
   useTranslation();
+  const insets = useSafeAreaInsets();
   const bookingId = params.bookingId as string;
   const orderName = params.orderName as string;
   const lottieRef = useRef<LottieView>(null);
@@ -126,7 +128,7 @@ export default function ScanChallanScreen() {
       <ScreenHeader title="Scan Challan" />
 
       {/* Content */}
-      <View style={[styles.content, { backgroundColor: theme.colors.background.secondary }]}>
+      <View style={[styles.content, { backgroundColor: theme.colors.background.secondary, paddingBottom: 100 + insets.bottom }]}>
         {/* Lottie Animation - Step 4 */}
         <View style={styles.lottieHeaderContainer}>
           <LottieView
@@ -200,7 +202,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 20,
-    paddingBottom: 40,
   },
   lottieHeaderContainer: {
     alignItems: 'center',

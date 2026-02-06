@@ -21,6 +21,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import LottieView from 'lottie-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../src/context/ThemeContext';
 import { useTranslation } from '../src/context/LanguageContext';
 import { bookingService, BookingDetailResponse } from '../src/services/api/bookingService';
@@ -32,6 +33,7 @@ export default function ScanProductScreen() {
   const params = useLocalSearchParams();
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const bookingId = params.bookingId as string;
   const orderName = params.orderName as string;
 
@@ -177,7 +179,7 @@ export default function ScanProductScreen() {
 
       <ScrollView
         style={[styles.scrollView, { backgroundColor: theme.colors.background.secondary }]}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: 100 + insets.bottom }]}
       >
         {/* Lottie Animation - Step 2 */}
         <View style={styles.lottieHeaderContainer}>
@@ -333,7 +335,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: spacing.lg,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
   },
   lottieHeaderContainer: {
     alignItems: 'center',
