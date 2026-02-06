@@ -17,6 +17,7 @@ import {
   RefreshControl,
   Modal,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
@@ -247,6 +248,7 @@ const SettlementRequestCard = ({ settlement, onPress, theme, t }: any) => {
 export default function SettleYourOrder() {
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [orders, setOrders] = useState<BookingOrderOption[]>([]);
@@ -435,7 +437,7 @@ export default function SettleYourOrder() {
     return (
       <ScrollView
         style={[styles.container, { backgroundColor: theme.colors.background.secondary }]}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={{ paddingBottom: 100 + insets.bottom }}
       >
         <StepIndicator currentStep={4} theme={theme} t={t} />
 
@@ -464,7 +466,7 @@ export default function SettleYourOrder() {
     return (
       <ScrollView
         style={[styles.container, { backgroundColor: theme.colors.background.secondary }]}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={{ paddingBottom: 100 + insets.bottom }}
       >
         <StepIndicator currentStep={2} theme={theme} t={t} />
 
@@ -549,7 +551,7 @@ export default function SettleYourOrder() {
   return (
     <ScrollView
       style={[styles.container, { backgroundColor: theme.colors.background.secondary }]}
-      contentContainerStyle={styles.scrollContent}
+      contentContainerStyle={{ paddingBottom: 100 + insets.bottom }}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[theme.colors.primary]} tintColor={theme.colors.primary} />}
     >
       <StepIndicator currentStep={1} theme={theme} t={t} />

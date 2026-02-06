@@ -14,6 +14,7 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { useTheme } from '../src/context/ThemeContext';
@@ -50,6 +51,7 @@ const TrashIcon = ({ color = '#EF4444', size = 20 }: { color?: string; size?: nu
 export default function WishlistScreen() {
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
   const wishlist = useWishlistStore((state) => state.wishlist);
   const removeFromWishlist = useWishlistStore((state) => state.removeFromWishlist);
 
@@ -158,7 +160,8 @@ export default function WishlistScreen() {
           </View>
         )}
 
-        <View style={styles.bottomSpacer} />
+        {/* Dynamic bottom spacer for navigation bar */}
+        <View style={{ height: 80 + insets.bottom }} />
       </ScrollView>
 
       {/* Bottom Action Bar */}

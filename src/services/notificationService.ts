@@ -29,6 +29,8 @@ export enum NotificationType {
   BOOKING_CANCELLED = 'booking_cancelled',
   PICKUP_STARTED = 'pickup_started',
   RETURN_STARTED = 'return_started',
+  PICKUP_CONFIRMED = 'pickup_confirmed',
+  RETURN_CONFIRMED = 'return_confirmed',
   PICKUP_OTP = 'pickup_otp',
   RETURN_OTP = 'return_otp',
   PAYMENT_SETTLEMENT = 'payment_settlement',
@@ -49,6 +51,8 @@ const VIBRATION_PATTERNS = {
   [NotificationType.BOOKING_CANCELLED]: [0, 300], // Single long
   [NotificationType.PICKUP_STARTED]: [0, 100, 50, 100], // Double tap
   [NotificationType.RETURN_STARTED]: [0, 100, 50, 100], // Double tap
+  [NotificationType.PICKUP_CONFIRMED]: [0, 50, 50, 50, 50, 50, 50, 50], // Triple short (celebration) - successful pickup
+  [NotificationType.RETURN_CONFIRMED]: [0, 50, 50, 50, 50, 50, 50, 50], // Triple short (celebration) - successful return
   [NotificationType.PICKUP_OTP]: [0, 100, 50, 100, 50, 200], // Urgent - same as new booking
   [NotificationType.RETURN_OTP]: [0, 100, 50, 100, 50, 200], // Urgent - same as new booking
   [NotificationType.PAYMENT_SETTLEMENT]: [0, 200, 100, 200], // Double long
@@ -69,6 +73,8 @@ const HAPTIC_PATTERNS = {
   [NotificationType.BOOKING_CANCELLED]: Haptics.NotificationFeedbackType.Error,
   [NotificationType.PICKUP_STARTED]: Haptics.NotificationFeedbackType.Success,
   [NotificationType.RETURN_STARTED]: Haptics.NotificationFeedbackType.Success,
+  [NotificationType.PICKUP_CONFIRMED]: Haptics.NotificationFeedbackType.Success, // Successful pickup confirmation
+  [NotificationType.RETURN_CONFIRMED]: Haptics.NotificationFeedbackType.Success, // Successful return confirmation
   [NotificationType.PICKUP_OTP]: Haptics.NotificationFeedbackType.Warning, // Urgent attention needed
   [NotificationType.RETURN_OTP]: Haptics.NotificationFeedbackType.Warning, // Urgent attention needed
   [NotificationType.PAYMENT_SETTLEMENT]: Haptics.NotificationFeedbackType.Warning,
@@ -318,7 +324,7 @@ class NotificationService {
 
   async showNewBookingRequest(customerName: string, orderDetails: string, bookingId: string) {
     await this.showNotification(
-      '🎬 New Pickup Request',
+      'New Pickup Request',
       `${customerName} wants to ${orderDetails}`,
       NotificationType.NEW_BOOKING_REQUEST,
       { bookingId, customerName },
@@ -328,7 +334,7 @@ class NotificationService {
 
   async showPaymentSettlement(amount: number, orderId: string, settlementId: string) {
     await this.showNotification(
-      '💰 Settlement Due',
+      'Settlement Due',
       `Payment of ₹${amount.toLocaleString('en-IN')} pending for Order #${orderId}`,
       NotificationType.PAYMENT_SETTLEMENT,
       { amount, orderId, settlementId },
@@ -338,7 +344,7 @@ class NotificationService {
 
   async showSettlementRequest(vendorName: string, amount: number, orderName: string, settlementId: string) {
     await this.showNotification(
-      '💰 New Settlement Request',
+      'New Settlement Request',
       `${vendorName} submitted a settlement request for ₹${amount.toLocaleString('en-IN')} - ${orderName}`,
       NotificationType.PAYMENT_SETTLEMENT,
       { vendorName, amount, orderName, settlementId, settlement_id: settlementId, type: 'settlement_request' },
@@ -348,7 +354,7 @@ class NotificationService {
 
   async showPaymentReceived(amount: number, orderId: string) {
     await this.showNotification(
-      '✅ Payment Received',
+      'Payment Received',
       `₹${amount.toLocaleString('en-IN')} received for Order #${orderId}`,
       NotificationType.PAYMENT_RECEIVED,
       { amount, orderId },
@@ -358,7 +364,7 @@ class NotificationService {
 
   async showPickupReminder(orderName: string, timeRemaining: string, bookingId: string) {
     await this.showNotification(
-      '⏰ Pickup Reminder',
+      'Pickup Reminder',
       `${orderName} pickup due ${timeRemaining}`,
       NotificationType.PICKUP_REMINDER,
       { orderName, bookingId },
@@ -368,7 +374,7 @@ class NotificationService {
 
   async showReturnReminder(orderName: string, timeRemaining: string, bookingId: string) {
     await this.showNotification(
-      '⏰ Return Reminder',
+      'Return Reminder',
       `${orderName} return due ${timeRemaining}`,
       NotificationType.RETURN_REMINDER,
       { orderName, bookingId },
@@ -378,7 +384,7 @@ class NotificationService {
 
   async showOrderCancelled(orderName: string, reason: string) {
     await this.showNotification(
-      '❌ Order Cancelled',
+      'Order Cancelled',
       `${orderName} - ${reason}`,
       NotificationType.ORDER_CANCELLED,
       { orderName, reason },
@@ -391,7 +397,7 @@ class NotificationService {
    */
   async showBookingApproved(orderName: string, bookingId: string) {
     await this.showNotification(
-      '✅ Booking Approved',
+      'Booking Approved',
       `Your booking "${orderName}" has been approved!`,
       NotificationType.BOOKING_APPROVED,
       { orderName, bookingId, booking_id: bookingId },
@@ -404,7 +410,7 @@ class NotificationService {
    */
   async showBookingRejected(orderName: string, bookingId: string, reason?: string) {
     await this.showNotification(
-      '❌ Booking Rejected',
+      'Booking Rejected',
       reason ? `"${orderName}" - ${reason}` : `Your booking "${orderName}" was not approved`,
       NotificationType.BOOKING_REJECTED,
       { orderName, bookingId, booking_id: bookingId, reason },
@@ -417,7 +423,7 @@ class NotificationService {
    */
   async showBookingInProgress(orderName: string, bookingId: string) {
     await this.showNotification(
-      '🚀 Rental Started',
+      'Rental Started',
       `"${orderName}" pickup completed. Rental is now in progress`,
       NotificationType.BOOKING_IN_PROGRESS,
       { orderName, bookingId, booking_id: bookingId },
@@ -430,7 +436,7 @@ class NotificationService {
    */
   async showBookingCompleted(orderName: string, bookingId: string) {
     await this.showNotification(
-      '✅ Rental Completed',
+      'Rental Completed',
       `"${orderName}" has been returned successfully`,
       NotificationType.BOOKING_COMPLETED,
       { orderName, bookingId, booking_id: bookingId },
@@ -443,7 +449,7 @@ class NotificationService {
    */
   async showBookingCancelled(orderName: string, bookingId: string, reason?: string) {
     await this.showNotification(
-      '❌ Booking Cancelled',
+      'Booking Cancelled',
       reason ? `"${orderName}" - ${reason}` : `Booking "${orderName}" has been cancelled`,
       NotificationType.BOOKING_CANCELLED,
       { orderName, bookingId, booking_id: bookingId, reason },
@@ -456,7 +462,7 @@ class NotificationService {
    */
   async showPickupStarted(orderName: string, bookingId: string) {
     await this.showNotification(
-      '📦 Pickup Started',
+      'Pickup Started',
       `Pickup process started for "${orderName}"`,
       NotificationType.PICKUP_STARTED,
       { orderName, bookingId, booking_id: bookingId },
@@ -469,7 +475,7 @@ class NotificationService {
    */
   async showReturnStarted(orderName: string, bookingId: string) {
     await this.showNotification(
-      '🔄 Return Started',
+      'Return Started',
       `Return process started for "${orderName}"`,
       NotificationType.RETURN_STARTED,
       { orderName, bookingId, booking_id: bookingId },
@@ -482,7 +488,7 @@ class NotificationService {
    */
   async showPickupOTP(orderName: string, otp: string, bookingId: string) {
     await this.showNotification(
-      '🔐 Pickup OTP Generated',
+      'Pickup OTP Generated',
       `Your OTP for "${orderName}" is: ${otp}. Share this with the vendor for pickup verification.`,
       NotificationType.PICKUP_OTP,
       { orderName, bookingId, booking_id: bookingId, otp, otp_type: 'pickup' },
@@ -495,7 +501,7 @@ class NotificationService {
    */
   async showReturnOTP(orderName: string, otp: string, bookingId: string) {
     await this.showNotification(
-      '🔐 Return OTP Generated',
+      'Return OTP Generated',
       `Your OTP for "${orderName}" is: ${otp}. Share this with the vendor for return verification.`,
       NotificationType.RETURN_OTP,
       { orderName, bookingId, booking_id: bookingId, otp, otp_type: 'return' },

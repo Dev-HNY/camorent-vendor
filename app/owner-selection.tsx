@@ -16,6 +16,7 @@ import {
   TextInput,
   ActivityIndicator,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { useTheme } from '../src/context/ThemeContext';
@@ -34,6 +35,7 @@ import {
 export default function OwnerSelectionScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
 
@@ -202,7 +204,7 @@ export default function OwnerSelectionScreen() {
             )}
 
             {/* Owner List */}
-            <Animated.View entering={FadeInDown.delay(400).duration(500)} style={styles.ownersList}>
+            <Animated.View entering={FadeInDown.delay(400).duration(500)} style={[styles.ownersList, { paddingBottom: 100 + insets.bottom }]}>
               <Text style={[styles.ownersListTitle, { color: theme.colors.text.primary }]}>
                 {t.ownerSelection.available_owners} ({filteredOwners.length})
               </Text>

@@ -572,7 +572,7 @@ export const en = {
     equipment_total_label: 'Equipment Total',
     crew_total_label: 'Crew Total',
     total_amount_label: 'Total Amount',
-    pickup_info_title: '📋 Pick-Up Request Information',
+    pickup_info_title: 'Pick-Up Request Information',
     pickup_info_text: '• This is a pick-up request - you\'ll collect equipment from CAMORENT\n• Your request will be reviewed by CAMORENT team\n• You\'ll be notified once approved\n• Status: Pending Request (Draft)\n• Pick-up location & time will be confirmed after approval',
   },
 
@@ -726,9 +726,9 @@ export const en = {
     dismiss: 'Dismiss',
     mark_read: 'Mark as Read',
     // OTP Notifications
-    pickup_otp_title: '🔐 Pickup OTP Generated',
+    pickup_otp_title: 'Pickup OTP Generated',
     pickup_otp_body: 'Your OTP for "{orderName}" is: {otp}. Share this with the vendor for pickup verification.',
-    return_otp_title: '🔐 Return OTP Generated',
+    return_otp_title: 'Return OTP Generated',
     return_otp_body: 'Your OTP for "{orderName}" is: {otp}. Share this with the vendor for return verification.',
     otp_required: '{otpType} OTP Required',
     share_otp_message: 'Share this OTP with the vendor to confirm {otpType} for {orderName}.',
@@ -736,9 +736,9 @@ export const en = {
     copied: 'Copied',
     otp_copied: 'OTP copied to clipboard',
     // Settlement Notifications
-    new_settlement_request_title: '💰 New Settlement Request',
+    new_settlement_request_title: 'New Settlement Request',
     new_settlement_request_body: '{vendorName} submitted a settlement request for ₹{amount} - {orderName}',
-    settlement_challan_uploaded_title: '📄 Challan Uploaded',
+    settlement_challan_uploaded_title: 'Challan Uploaded',
     settlement_challan_uploaded_body: 'Payment challan has been uploaded for {orderName}. Please review and approve.',
     // Modal labels
     amount_due: 'Amount Due',

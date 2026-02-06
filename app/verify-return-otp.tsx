@@ -48,6 +48,19 @@ const PhoneIcon = ({ color, size = 20 }: { color: string; size?: number }) => (
   </Svg>
 );
 
+const PackageIcon = ({ color = '#565CAA', size = 32 }: { color?: string; size?: number }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M16.5 9.4L7.5 4.21M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </Svg>
+);
+
 export default function VerifyReturnOTPScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -164,7 +177,9 @@ export default function VerifyReturnOTPScreen() {
           <View style={[styles.content, { backgroundColor: theme.colors.background.secondary }]}>
             {/* Info Card */}
             <View style={[styles.infoCard, { backgroundColor: theme.colors.background.primary }]}>
-              <Text style={styles.infoIcon}>📦</Text>
+              <View style={styles.infoIconContainer}>
+                <PackageIcon color="#565CAA" size={32} />
+              </View>
               <Text style={[styles.infoTitle, { color: theme.colors.text.primary }]}>{t.verifyOtp.customerOtpVerification}</Text>
               <Text style={[styles.infoText, { color: theme.colors.text.secondary }]}>
                 {t.verifyOtp.requestOtpReturnDescription}
@@ -331,9 +346,9 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 4,
   },
-  infoIcon: {
-    fontSize: fontSize.xxxl + 16,
+  infoIconContainer: {
     marginBottom: spacing.md,
+    alignItems: 'center',
   },
   infoTitle: {
     fontSize: fontSize.xl,

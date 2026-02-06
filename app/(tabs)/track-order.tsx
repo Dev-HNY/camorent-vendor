@@ -800,8 +800,8 @@ export default function RequestsScreen() {
             </View>
           )}
 
-          {/* Bottom Padding for Tab Bar */}
-          <View style={{ height: 120 }} />
+          {/* Dynamic bottom spacer for tab bar + navigation bar */}
+          <View style={{ height: 90 + insets.bottom }} />
         </ScrollView>
       )}
     </View>

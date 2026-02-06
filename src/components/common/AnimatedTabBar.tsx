@@ -311,7 +311,7 @@ const createStyles = (theme: any) => StyleSheet.create({
     height: 70,
     borderRadius: 30,
     marginHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 8,
     overflow: 'hidden',
     ...theme.shadows.md,
   },

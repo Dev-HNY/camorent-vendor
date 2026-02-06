@@ -419,7 +419,8 @@ export default function ProfileScreen() {
             <Skeleton width="100%" height={56} borderRadius={16} />
           </View>
 
-          <View style={styles.bottomSpacer} />
+          {/* Dynamic bottom spacer for navigation bar */}
+          <View style={{ height: 40 + insets.bottom }} />
         </ScrollView>
       </View>
     );
@@ -578,7 +579,7 @@ export default function ProfileScreen() {
                     onPress={() => triggerTestNotification('request')}
                     activeOpacity={0.8}
                   >
-                    <Text style={styles.testButtonText}>🎬 Request</Text>
+                    <Text style={styles.testButtonText}>Request</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
@@ -586,7 +587,7 @@ export default function ProfileScreen() {
                     onPress={() => triggerTestNotification('settlement')}
                     activeOpacity={0.8}
                   >
-                    <Text style={styles.testButtonText}>💰 Settlement</Text>
+                    <Text style={styles.testButtonText}>Settlement</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -606,7 +607,8 @@ export default function ProfileScreen() {
           </Animated.View>
         </Animated.View>
 
-        <View style={styles.bottomSpacer} />
+        {/* Dynamic bottom spacer for navigation bar */}
+        <View style={{ height: 40 + insets.bottom }} />
       </ScrollView>
 
       {/* Language Selection Modal */}

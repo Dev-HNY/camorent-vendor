@@ -35,6 +35,18 @@ const InfoIcon = ({ size = 20, color = '#565CAA' }: { size?: number; color?: str
   </Svg>
 );
 
+const LockIcon = ({ color = '#565CAA', size = 32 }: { color?: string; size?: number }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zM7 11V7a5 5 0 0 1 10 0v4"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
 export default function VerifyOTPScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
@@ -161,7 +173,9 @@ export default function VerifyOTPScreen() {
           <View style={[styles.content, { backgroundColor: theme.colors.background.secondary }]}>
         {/* Info Card */}
         <View style={[styles.infoCard, { backgroundColor: theme.colors.background.primary }]}>
-          <Text style={styles.infoIcon}>🔐</Text>
+          <View style={styles.infoIconContainer}>
+            <LockIcon color="#565CAA" size={32} />
+          </View>
           <Text style={[styles.infoTitle, { color: theme.colors.text.primary }]}>Verify Pickup</Text>
           <Text style={[styles.infoText, { color: theme.colors.text.secondary }]}>
             Enter the 6-digit OTP provided by the customer to confirm equipment pickup
@@ -281,9 +295,9 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 4,
   },
-  infoIcon: {
-    fontSize: fontSize.xxxl + 16,
+  infoIconContainer: {
     marginBottom: spacing.md,
+    alignItems: 'center',
   },
   infoTitle: {
     fontSize: fontSize.xl,

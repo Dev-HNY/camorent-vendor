@@ -17,6 +17,7 @@ import {
   SafeAreaView,
   Platform,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 import { theme } from '../src/theme';
@@ -156,6 +157,7 @@ const ChevronRightIcon = ({ color, size = 20 }: { color: string; size?: number }
 export default function OrderDetailScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
   const currentOrder = useOrderStore((state) => state.currentOrder);
   const confirmOrder = useOrderStore((state) => state.confirmOrder);
   const { theme: appTheme, themeMode } = useTheme();
@@ -735,7 +737,8 @@ export default function OrderDetailScreen() {
           </View>
         )}
 
-        <View style={styles.bottomSpacer} />
+        {/* Dynamic bottom spacer for navigation bar */}
+        <View style={{ height: 80 + insets.bottom }} />
       </ScrollView>
       )}
 

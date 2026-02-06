@@ -73,6 +73,11 @@ export const GlobalNotificationHandler: React.FC = () => {
             // Pickup/return started
             await playBookingUpdateNotification();
             break;
+          case 'pickup_confirmed':
+          case 'return_confirmed':
+            // Pickup/return confirmed - owner receives confirmation
+            await playBookingUpdateNotification();
+            break;
           case 'pickup_otp':
           case 'return_otp':
             // OTP notification for owner - urgent sound
@@ -117,6 +122,12 @@ export const GlobalNotificationHandler: React.FC = () => {
       });
     } else if ((currentNotification.type === 'pickup_otp' || currentNotification.type === 'return_otp') && bookingId) {
       // OTP notifications - owners go to request-detail to manage the booking
+      router.push({
+        pathname: '/request-detail',
+        params: { bookingId: bookingId },
+      });
+    } else if ((currentNotification.type === 'pickup_confirmed' || currentNotification.type === 'return_confirmed') && bookingId) {
+      // Pickup/Return confirmed notifications - owners go to request-detail to see updated status
       router.push({
         pathname: '/request-detail',
         params: { bookingId: bookingId },
@@ -167,6 +178,10 @@ export const GlobalNotificationHandler: React.FC = () => {
       case 'pickup_otp':
       case 'return_otp':
         // OTP notifications are for owners to manage requests
+        return t.notifications.view_request || 'View Request';
+      case 'pickup_confirmed':
+      case 'return_confirmed':
+        // Confirmation notifications for owners
         return t.notifications.view_request || 'View Request';
       case 'settlement':
       case 'payment_settlement':

@@ -15,6 +15,7 @@ import {
   Platform,
   Vibration,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -106,6 +107,8 @@ export interface NotificationData {
     | 'booking_cancelled'
     | 'pickup_started'
     | 'return_started'
+    | 'pickup_confirmed'
+    | 'return_confirmed'
     | 'pickup_otp'
     | 'return_otp';
   data?: {
@@ -143,6 +146,7 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
 }) => {
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
+  const insets = useSafeAreaInsets();
 
   // Animation values
   const backdropOpacity = useSharedValue(0);
@@ -319,6 +323,8 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
       case 'booking_completed':
       case 'pickup_started':
       case 'return_started':
+      case 'pickup_confirmed':
+      case 'return_confirmed':
       case 'order_update':
       case 'status_change':
         return <RequestIcon size={64} />;
@@ -348,6 +354,8 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
       case 'booking_completed':
       case 'pickup_started':
       case 'return_started':
+      case 'pickup_confirmed':
+      case 'return_confirmed':
         return isDark
           ? ['#065F46', '#10B981', '#34D399'] as const
           : ['#10B981', '#34D399', '#6EE7B7'] as const;
@@ -374,6 +382,8 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
       case 'booking_completed':
       case 'pickup_started':
       case 'return_started':
+      case 'pickup_confirmed':
+      case 'return_confirmed':
         return ['#10B981', '#059669'] as const;
       case 'booking_rejected':
       case 'booking_cancelled':
@@ -415,6 +425,7 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
             style={[
               styles.card,
               { backgroundColor: theme.colors.background.primary },
+              { marginBottom: Math.max(20, insets.bottom + 12) },
               cardStyle,
             ]}
           >

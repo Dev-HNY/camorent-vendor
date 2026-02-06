@@ -18,6 +18,7 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 import Animated, { FadeInDown, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
@@ -205,6 +206,7 @@ const AnimatedHistoryCard = ({
 export default function HistoryScreen() {
   const params = useLocalSearchParams();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
   const pageTitle = (params.title as string) || t.orders.history;
@@ -521,7 +523,8 @@ export default function HistoryScreen() {
           </View>
         )}
 
-        <View style={styles.bottomSpacer} />
+        {/* Dynamic bottom spacer for navigation bar */}
+        <View style={{ height: 40 + insets.bottom }} />
       </ScrollView>
     </SafeAreaView>
   );

@@ -12,6 +12,7 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -42,6 +43,7 @@ export const AnimatedModal: React.FC<AnimatedModalProps> = ({
   closeOnBackdropPress = true,
   showBackdrop = true,
 }) => {
+  const insets = useSafeAreaInsets();
   const backdropOpacity = useSharedValue(0);
   const modalTranslateY = useSharedValue(position === 'bottom' ? SCREEN_HEIGHT : 0);
   const modalScale = useSharedValue(0.9);
@@ -156,6 +158,7 @@ export const AnimatedModal: React.FC<AnimatedModalProps> = ({
             style={[
               styles.modalContent,
               position === 'bottom' ? styles.bottomModal : styles.centerModal,
+              position === 'bottom' && { paddingBottom: spacing.xxl + insets.bottom },
               modalStyle,
             ]}
           >

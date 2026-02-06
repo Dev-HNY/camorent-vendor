@@ -796,7 +796,8 @@ export default function ProductSelectionScreen() {
               </View>
             )}
 
-            <View style={styles.bottomSpacer} />
+            {/* Dynamic bottom spacer for floating bar + navigation bar */}
+            <View style={{ height: 120 + insets.bottom }} />
           </ScrollView>
         </View>
       </View>

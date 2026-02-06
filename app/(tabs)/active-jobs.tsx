@@ -577,7 +577,8 @@ export default function ActiveJobsScreen() {
                   <ActivityIndicator size="small" color={theme.colors.primary} />
                 </View>
               )}
-              <View style={styles.bottomSpacer} />
+              {/* Dynamic bottom spacer for tab bar + navigation bar */}
+              <View style={{ height: 90 + insets.bottom }} />
             </>
           }
           removeClippedSubviews={true}

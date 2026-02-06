@@ -6,6 +6,7 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Dimensions, Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -37,6 +38,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   initialSnap = 0,
   enablePanDownToClose = true,
 }) => {
+  const insets = useSafeAreaInsets();
   const translateY = useSharedValue(SCREEN_HEIGHT);
   const backdropOpacity = useSharedValue(0);
   const context = useSharedValue({ y: 0 });
@@ -146,7 +148,7 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
           </View>
 
           {/* Content */}
-          <View style={styles.content}>
+          <View style={[styles.content, { paddingBottom: insets.bottom }]}>
             {children}
           </View>
         </Animated.View>

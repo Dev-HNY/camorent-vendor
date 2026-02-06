@@ -17,6 +17,7 @@ import {
   Image,
   Linking,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
 import Animated, {
@@ -89,9 +90,22 @@ const XIcon = ({ color, size = 20 }: { color: string; size?: number }) => (
   </Svg>
 );
 
+const LockIcon = ({ color = '#565CAA', size = 20 }: { color?: string; size?: number }) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M19 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2zM7 11V7a5 5 0 0 1 10 0v4"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
 export default function RequestDetailScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
   const bookingId = params.bookingId as string;
   const { theme: appTheme, themeMode } = useTheme();
   const { t } = useTranslation();
@@ -441,7 +455,7 @@ export default function RequestDetailScreen() {
           {otpData && (otpData.pickup_otp || otpData.return_otp) && (
             <View style={[styles.card, styles.otpCard, { backgroundColor: appTheme.colors.background.primary, borderColor: appTheme.colors.primary }]}>
               <View style={styles.otpHeader}>
-                <Text style={[styles.otpIcon]}>🔐</Text>
+                <LockIcon color="#565CAA" size={20} />
                 <Text style={[styles.cardTitle, { color: appTheme.colors.text.primary, marginBottom: 0 }]}>
                   Verification OTP
                 </Text>
@@ -763,7 +777,8 @@ export default function RequestDetailScreen() {
             </View>
           )}
 
-          <View style={styles.bottomSpacer} />
+          {/* Dynamic bottom spacer for navigation bar */}
+          <View style={{ height: 20 + insets.bottom }} />
         </ScrollView>
       ) : null}
 

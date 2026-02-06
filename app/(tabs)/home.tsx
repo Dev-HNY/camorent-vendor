@@ -801,7 +801,7 @@ export default function VendorHomeDashboard() {
       >
         <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={{ paddingBottom: 100 + insets.bottom }}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#565CAA']} tintColor="#565CAA" />
@@ -809,7 +809,7 @@ export default function VendorHomeDashboard() {
       >
         {/* Greeting */}
         <Animated.View entering={FadeInDown.delay(100).duration(400)} style={styles.greetingSection}>
-          <Text style={[styles.greetingText, { color: theme.colors.text.primary }]}>{t.home.hi}, {getUserName()} 👋</Text>
+          <Text style={[styles.greetingText, { color: theme.colors.text.primary }]}>{t.home.hi}, {getUserName()}</Text>
           <Text style={[styles.greetingSubtext, { color: theme.colors.text.secondary }]}>{t.home.welcomeBack}</Text>
         </Animated.View>
 
@@ -1046,7 +1046,8 @@ export default function VendorHomeDashboard() {
           )}
         </Animated.View>
 
-        <View style={styles.bottomSpacer} />
+        {/* Dynamic bottom spacer for tab bar + navigation bar */}
+        <View style={{ height: 90 + insets.bottom }} />
       </ScrollView>
       </KeyboardAvoidingView>
 
