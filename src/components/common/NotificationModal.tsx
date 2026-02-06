@@ -75,6 +75,128 @@ const SettlementIcon = ({ size = 56 }: { size?: number }) => (
   </Svg>
 );
 
+// Success/Check Icon (for approvals, completions)
+const SuccessIcon = ({ size = 56 }: { size?: number }) => (
+  <Svg width={size} height={size} viewBox="0 0 64 64" fill="none">
+    <Defs>
+      <RadialGradient id="successGrad" cx="50%" cy="30%">
+        <Stop offset="0%" stopColor="#34D399" stopOpacity="1" />
+        <Stop offset="100%" stopColor="#10B981" stopOpacity="1" />
+      </RadialGradient>
+    </Defs>
+    <Circle cx="32" cy="32" r="28" fill="url(#successGrad)" opacity="0.15" />
+    <Path
+      d="M18 32L26 40L46 20"
+      stroke="#10B981"
+      strokeWidth="4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+// Error/X Icon (for rejections, cancellations)
+const ErrorIcon = ({ size = 56 }: { size?: number }) => (
+  <Svg width={size} height={size} viewBox="0 0 64 64" fill="none">
+    <Defs>
+      <RadialGradient id="errorGrad" cx="50%" cy="30%">
+        <Stop offset="0%" stopColor="#F87171" stopOpacity="1" />
+        <Stop offset="100%" stopColor="#EF4444" stopOpacity="1" />
+      </RadialGradient>
+    </Defs>
+    <Circle cx="32" cy="32" r="28" fill="url(#errorGrad)" opacity="0.15" />
+    <Path
+      d="M22 22L42 42M42 22L22 42"
+      stroke="#EF4444"
+      strokeWidth="4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+// Package/Box Icon (for pickups, returns)
+const PackageIcon = ({ size = 56 }: { size?: number }) => (
+  <Svg width={size} height={size} viewBox="0 0 64 64" fill="none">
+    <Defs>
+      <RadialGradient id="packageGrad" cx="50%" cy="30%">
+        <Stop offset="0%" stopColor="#60A5FA" stopOpacity="1" />
+        <Stop offset="100%" stopColor="#3B82F6" stopOpacity="1" />
+      </RadialGradient>
+    </Defs>
+    <Circle cx="32" cy="32" r="28" fill="url(#packageGrad)" opacity="0.15" />
+    <Path
+      d="M42 20L22 20C20.3431 20 19 21.3431 19 23V41C19 42.6569 20.3431 44 22 44H42C43.6569 44 45 42.6569 45 41V23C45 21.3431 43.6569 20 42 20Z"
+      stroke="#3B82F6"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M19 28H45M32 28V44"
+      stroke="#3B82F6"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+// Lock/Security Icon (for OTP notifications)
+const LockIcon = ({ size = 56 }: { size?: number }) => (
+  <Svg width={size} height={size} viewBox="0 0 64 64" fill="none">
+    <Defs>
+      <RadialGradient id="lockGrad" cx="50%" cy="30%">
+        <Stop offset="0%" stopColor="#A78BFA" stopOpacity="1" />
+        <Stop offset="100%" stopColor="#8B5CF6" stopOpacity="1" />
+      </RadialGradient>
+    </Defs>
+    <Circle cx="32" cy="32" r="28" fill="url(#lockGrad)" opacity="0.15" />
+    <Path
+      d="M46 28H18C16.3431 28 15 29.3431 15 31V46C15 47.6569 16.3431 49 18 49H46C47.6569 49 49 47.6569 49 46V31C49 29.3431 47.6569 28 46 28Z"
+      stroke="#8B5CF6"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M22 28V20C22 17.3478 23.0536 14.8043 24.9289 12.9289C26.8043 11.0536 29.3478 10 32 10C34.6522 10 37.1957 11.0536 39.0711 12.9289C40.9464 14.8043 42 17.3478 42 20V28"
+      stroke="#8B5CF6"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+// Rocket/Start Icon (for rental started)
+const RocketIcon = ({ size = 56 }: { size?: number }) => (
+  <Svg width={size} height={size} viewBox="0 0 64 64" fill="none">
+    <Defs>
+      <RadialGradient id="rocketGrad" cx="50%" cy="30%">
+        <Stop offset="0%" stopColor="#60A5FA" stopOpacity="1" />
+        <Stop offset="100%" stopColor="#3B82F6" stopOpacity="1" />
+      </RadialGradient>
+    </Defs>
+    <Circle cx="32" cy="32" r="28" fill="url(#rocketGrad)" opacity="0.15" />
+    <Path
+      d="M32 15C32 15 42 20 42 32C42 32 42 42 32 49C32 49 22 42 22 32C22 20 32 15 32 15Z"
+      stroke="#3B82F6"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Circle cx="32" cy="28" r="3" fill="#3B82F6" />
+    <Path
+      d="M20 38L16 42L22 48L26 44"
+      stroke="#3B82F6"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
 // Premium Close Icon
 const CloseIcon = ({ size = 24, color = '#6B7280' }: { size?: number; color?: string }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
@@ -313,23 +435,29 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
   const getNotificationIcon = () => {
     switch (notification?.type) {
       case 'request':
+        return <RequestIcon size={64} />;
       case 'pickup_otp':
       case 'return_otp':
-        return <RequestIcon size={64} />;
+        return <LockIcon size={64} />;
       case 'settlement':
+      case 'payment_settlement':
+      case 'settlement_request':
         return <SettlementIcon size={64} />;
       case 'booking_approved':
-      case 'booking_in_progress':
       case 'booking_completed':
-      case 'pickup_started':
-      case 'return_started':
       case 'pickup_confirmed':
       case 'return_confirmed':
-      case 'order_update':
-      case 'status_change':
-        return <RequestIcon size={64} />;
+        return <SuccessIcon size={64} />;
+      case 'booking_in_progress':
+        return <RocketIcon size={64} />;
+      case 'pickup_started':
+      case 'return_started':
+        return <PackageIcon size={64} />;
       case 'booking_rejected':
       case 'booking_cancelled':
+        return <ErrorIcon size={64} />;
+      case 'order_update':
+      case 'status_change':
         return <RequestIcon size={64} />;
       default:
         return <RequestIcon size={64} />;

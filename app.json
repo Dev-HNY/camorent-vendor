@@ -8,6 +8,7 @@
     "userInterfaceStyle": "automatic",
     "scheme": "camorent",
     "privacy": "unlisted",
+    "platforms": ["android"],
     "splash": {
       "image": "./assets/icon-blue.png",
       "resizeMode": "contain",
@@ -49,16 +50,6 @@
         }
       ]
     ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.camorentvendor.app",
-      "buildNumber": "1",
-      "infoPlist": {
-        "NSCameraUsageDescription": "The app needs access to your camera to scan products and challan documents.",
-        "NSPhotoLibraryUsageDescription": "The app needs access to your photos to upload product and challan images.",
-        "NSPhotoLibraryAddUsageDescription": "The app needs permission to save photos to your library."
-      }
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon-blue.png",
@@ -74,19 +65,15 @@
         "android.permission.POST_NOTIFICATIONS",
         "android.permission.VIBRATE",
         "android.permission.INTERNET",
-        "android.permission.ACCESS_NETWORK_STATE",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.ACCESS_NETWORK_STATE"
       ],
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
       "blockedPermissions": [
         "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION"
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.RECORD_AUDIO"
       ]
-    },
-    "web": {
-      "favicon": "./assets/favicon.png",
-      "bundler": "metro"
     },
     "extra": {
       "router": {

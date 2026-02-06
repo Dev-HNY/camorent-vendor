@@ -27,6 +27,8 @@ export interface NotificationData {
     | 'booking_cancelled'
     | 'pickup_started'
     | 'return_started'
+    | 'pickup_confirmed'
+    | 'return_confirmed'
     | 'pickup_otp'
     | 'return_otp';
   data?: {
@@ -165,7 +167,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const triggerTestNotification = (type: 'request' | 'settlement') => {
     const testNotifications = {
       request: {
-        title: '🎬 New Pickup Request',
+        title: 'New Pickup Request',
         body: 'John Doe wants to rent 3 cameras for 5 days',
         type: 'request' as const,
         data: {
@@ -178,7 +180,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         }
       },
       settlement: {
-        title: '💰 Settlement Due',
+        title: 'Settlement Due',
         body: 'Payment of ₹25,000 pending for Order #789',
         type: 'settlement' as const,
         data: {

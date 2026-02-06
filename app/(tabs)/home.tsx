@@ -8,10 +8,8 @@ import {
   View,
   Text,
   StyleSheet,
-  StatusBar,
   ScrollView,
   TouchableOpacity,
-  Platform,
   RefreshControl,
   Dimensions,
   KeyboardAvoidingView,
@@ -508,7 +506,7 @@ export default function VendorHomeDashboard() {
   const router = useRouter();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const { theme, themeMode } = useTheme();
+  const { theme } = useTheme();
   const { t } = useTranslation();
   const { pendingRequestsCount, setPendingRequestsCount, setPendingSettlementsCount } = useNotification();
   const user = useUserStore((state) => state.user);
@@ -767,7 +765,6 @@ export default function VendorHomeDashboard() {
   if (isLoading) {
     return (
       <Animated.View style={styles.loaderContainer} exiting={FadeOut.duration(300)}>
-        <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
         <RentalProcessLoader isDataLoaded={isDataLoaded} onProceed={handleProceedToHome} />
       </Animated.View>
     );
@@ -777,8 +774,6 @@ export default function VendorHomeDashboard() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background.primary, paddingTop: insets.top }]}>
-      <StatusBar barStyle={themeMode === 'dark' ? 'light-content' : 'dark-content'} backgroundColor="transparent" translucent />
-
       {/* Modern Header */}
       <Animated.View style={[styles.header, headerAnimatedStyle, { backgroundColor: theme.colors.background.primary }]}>
         <View style={styles.headerLeft}>
@@ -796,8 +791,8 @@ export default function VendorHomeDashboard() {
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        behavior="height"
+        keyboardVerticalOffset={20}
       >
         <ScrollView
         style={styles.scrollView}

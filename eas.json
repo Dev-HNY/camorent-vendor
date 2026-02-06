@@ -10,9 +10,6 @@
       "android": {
         "gradleCommand": ":app:assembleDebug",
         "buildType": "apk"
-      },
-      "ios": {
-        "buildConfiguration": "Debug"
       }
     },
     "development-apk": {
@@ -36,18 +33,13 @@
         "credentialsSource": "remote",
         "gradleCommand": ":app:bundleRelease",
         "node": "20.18.1"
-      },
-      "ios": {
-        "buildConfiguration": "Release",
-        "credentialsSource": "remote",
-        "image": "latest",
-        "node": "20.18.1"
       }
     },
     "production-apk": {
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
+        "gradleCommand": ":app:assembleRelease",
+        "node": "20.18.1"
       }
     }
   },
@@ -56,12 +48,6 @@
       "android": {
         "serviceAccountKeyPath": "./google-play-service-account.json",
         "track": "internal"
-      },
-      "ios": {
-        "ascAppId": "6758699408",
-        "appleId": "samg250@gmail.com",
-        "ascApiKeyPath": "./app-store-connect-api-key.json",
-        "appleTeamId": "D5GU9XX6ZG"
       }
     }
   }
