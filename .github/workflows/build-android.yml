@@ -85,6 +85,7 @@ jobs:
           cd android
           ./gradlew assembleRelease --no-daemon --stacktrace
         env:
+          NODE_ENV: 'production'
           NODE_OPTIONS: '--max-old-space-size=8192'
           GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:MaxMetaspaceSize=1024m"'
 
@@ -94,6 +95,7 @@ jobs:
           cd android
           ./gradlew bundleRelease --no-daemon --stacktrace
         env:
+          NODE_ENV: 'production'
           NODE_OPTIONS: '--max-old-space-size=8192'
           GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:MaxMetaspaceSize=1024m"'
 
