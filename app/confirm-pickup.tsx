@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -66,7 +67,7 @@ export default function ConfirmPickupScreen() {
 
       setBookings(pickupDueBookings);
     } catch (error) {
-      console.error('Error fetching pickup due bookings:', error);
+      // Error fetching pickup due bookings - will show empty state
     } finally {
       setLoading(false);
     }
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
     marginBottom: 16,
-    maxHeight: 300,
+    maxHeight: Dimensions.get('window').height * 0.4,
   },
   dropdownOption: {
     padding: 16,

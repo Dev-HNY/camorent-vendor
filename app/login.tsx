@@ -122,7 +122,7 @@ export default function LoginScreen() {
   const [successMessage, setSuccessMessage] = useState('');
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
+
 
   // Animation values
   const buttonScale = useSharedValue(1);
@@ -186,13 +186,12 @@ export default function LoginScreen() {
         try {
           await registerPushToken();
         } catch (error) {
-          console.log('Push token registration skipped:', error);
+          // Push token registration skipped - not critical
         }
 
         setSuccessMessage(t.login.welcome_back_vendor.replace('{name}', vendorUser.first_name || 'Vendor'));
         setShowSuccessModal(true);
       } catch (error: any) {
-        console.error('Login error:', error);
         setErrorMessage(error.message || 'Invalid credentials. Please try again.');
         setShowErrorModal(true);
       } finally {
@@ -415,15 +414,7 @@ export default function LoginScreen() {
         icon="error"
       />
 
-      {/* Forgot Password Modal */}
-      <SuccessModal
-        visible={showForgotPassword}
-        onClose={() => setShowForgotPassword(false)}
-        title="Forgot Password"
-        message="Please contact support to reset your password."
-        icon="info"
-        primaryButtonText="OK"
-      />
+
     </View>
   );
 }

@@ -23,10 +23,6 @@ export function useNavigationBarTheme() {
           );
         } catch (error) {
           // Silently fail - navigation bar theming is not critical
-          // Only log in development
-          if (__DEV__) {
-            console.log('Navigation bar theme update skipped:', error);
-          }
         }
       };
 

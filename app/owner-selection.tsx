@@ -15,6 +15,7 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -67,7 +68,6 @@ export default function OwnerSelectionScreen() {
       const response = await bookingService.getAvailableOwners();
       setOwners(response.owners);
     } catch (err: any) {
-      console.error('Error fetching available owners:', err);
       const errorMessage = err?.response?.data?.detail?.message || err?.message || 'Unknown error';
       setError(t.errors.failed_load_owners.replace('{errorMessage}', errorMessage));
       setErrorModalMessage(t.errors.failed_load_owners_with_retry.replace('{errorMessage}', errorMessage));
@@ -127,7 +127,8 @@ export default function OwnerSelectionScreen() {
         subtitle={t.ownerSelection.subtitle}
       />
 
-      <ScrollView style={[styles.content, { backgroundColor: theme.colors.background.secondary }]} showsVerticalScrollIndicator={false}>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}>
+      <ScrollView style={[styles.content, { backgroundColor: theme.colors.background.secondary }]} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
         {/* Loading State */}
         {isLoading && (
           <View style={styles.loadingContainer}>
@@ -293,6 +294,7 @@ export default function OwnerSelectionScreen() {
           </>
         )}
       </ScrollView>
+      </KeyboardAvoidingView>
 
       {/* Floating Bottom Button */}
       {selectedOwnerId && selectedOwner && (

@@ -56,18 +56,15 @@ export default function ReturnScanChallanScreen() {
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const imageUri = result.assets[0].uri;
-        console.log('Challan scanned:', imageUri);
         // Save challan image to AsyncStorage
         try {
           await AsyncStorage.setItem(`return_challan_image_${bookingId}`, imageUri);
-          console.log('Return challan saved to AsyncStorage');
         } catch (error) {
-          console.error('Error saving return challan image:', error);
+          // Error saving return challan image - continue anyway
         }
         navigateToOTP();
       }
     } catch (error) {
-      console.error('Camera error:', error);
       setErrorMessage('Failed to open camera. Please try again or use gallery instead.');
       setShowError(true);
     }
@@ -91,18 +88,15 @@ export default function ReturnScanChallanScreen() {
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const imageUri = result.assets[0].uri;
-        console.log('Challan uploaded:', imageUri);
         // Save challan image to AsyncStorage
         try {
           await AsyncStorage.setItem(`return_challan_image_${bookingId}`, imageUri);
-          console.log('Return challan saved to AsyncStorage');
         } catch (error) {
-          console.error('Error saving return challan image:', error);
+          // Error saving return challan image - continue anyway
         }
         navigateToOTP();
       }
     } catch (error) {
-      console.error('Gallery error:', error);
       setErrorMessage('Failed to open gallery. Please try again.');
       setShowError(true);
     }

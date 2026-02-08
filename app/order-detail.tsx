@@ -16,6 +16,7 @@ import {
   Image,
   SafeAreaView,
   Platform,
+  Dimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -28,6 +29,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '../src/context/ThemeContext';
 import { useTranslation } from '../src/context/LanguageContext';
 import { SuccessModal } from '../src/components/common/SuccessModal';
+import { useFocusEffect } from '@react-navigation/native';
+import { Notifications, isAvailable as isNotificationsAvailable } from '../src/utils/notificationLoader';
 
 // Modern SVG Icons
 const ChevronLeftIcon = ({ color, size = 24 }: { color: string; size?: number }) => (
@@ -195,7 +198,6 @@ export default function OrderDetailScreen() {
       const response = await bookingService.getBookingDetails(bookingId);
       setBooking(response);
     } catch (err: any) {
-      console.error('Error fetching booking details:', err);
       setError(err.message || 'Failed to load booking details');
     } finally {
       if (showLoadingState) {
@@ -221,6 +223,17 @@ export default function OrderDetailScreen() {
       clearInterval(interval);
     };
   }, [bookingId, fetchBookingDetails]);
+
+  // ⭐ CLEAR NOTIFICATIONS WHEN SCREEN OPENS - Prevents accumulation
+  useFocusEffect(
+    useCallback(() => {
+      if (isNotificationsAvailable && Notifications?.dismissAllNotificationsAsync) {
+        Notifications.dismissAllNotificationsAsync().catch(() => {
+          // Failed to dismiss notifications - not critical
+        });
+      }
+    }, [])
+  );
 
   // Get the order from orders list if it's an active job
   const orders = useOrderStore((state) => state.orders);
@@ -327,7 +340,6 @@ export default function OrderDetailScreen() {
   const handleRequestPickup = () => {
     if (isHistory) {
       // For history orders, just show alert or do nothing
-      console.log('Viewing history order');
       return;
     }
 
@@ -355,7 +367,6 @@ export default function OrderDetailScreen() {
           setShowError(true);
         }
       } catch (error) {
-        console.error('Error opening phone dialer:', error);
         setErrorMessage('Failed to open phone dialer');
         setShowError(true);
       }
@@ -1150,8 +1161,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   uploadedImage: {
-    width: 120,
-    height: 120,
+    width: Dimensions.get('window').width * 0.3,
+    height: Dimensions.get('window').width * 0.3,
     borderRadius: 8,
   },
   imageCaption: {

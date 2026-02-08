@@ -19,6 +19,7 @@ import {
   ScrollView,
   TextInput,
   Animated,
+  Dimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -508,7 +509,7 @@ const createStyles = (theme: any) =>
       fontWeight: theme.typography.fontWeight.medium,
     },
     dropdownMenu: {
-      maxHeight: 300,
+      maxHeight: Dimensions.get('window').height * 0.4,
     },
     dropdownItem: {
       flexDirection: 'row',

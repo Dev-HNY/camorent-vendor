@@ -42,15 +42,12 @@ export const initializeNotificationSound = async (): Promise<void> => {
 
       notificationSound = sound;
       isSoundLoaded = true;
-      console.log('Notification sound loaded successfully');
     } catch (loadError) {
-      console.warn('Could not load notification sound file:', loadError);
       // Set flag to false so we don't keep trying to load
       isSoundLoaded = false;
       notificationSound = null;
     }
   } catch (error) {
-    console.error('Failed to initialize notification sound:', error);
     isSoundLoaded = false;
     notificationSound = null;
   }
@@ -67,7 +64,7 @@ export const unloadNotificationSound = async (): Promise<void> => {
       isSoundLoaded = false;
     }
   } catch (error) {
-    console.error('Failed to unload notification sound:', error);
+    // Failed to unload notification sound - not critical
   }
 };
 
@@ -102,7 +99,7 @@ export const playNotificationWithVibration = async (
           break;
       }
     } catch (hapticError) {
-      console.warn('Haptic feedback failed:', hapticError);
+      // Haptic feedback failed - not critical
     }
 
     // Initialize sound if not already loaded (try once)
@@ -123,12 +120,10 @@ export const playNotificationWithVibration = async (
         await notificationSound.setPositionAsync(0);
         await notificationSound.playAsync();
       } catch (playError) {
-        console.warn('Could not play notification sound:', playError);
         // Sound playback failed, but haptic already played so user still gets feedback
       }
     }
   } catch (error) {
-    console.warn('Notification feedback error:', error);
     // Even if everything fails, don't crash - just skip the feedback
   }
 };
@@ -151,7 +146,7 @@ export const playNotificationSound = async (): Promise<void> => {
       await notificationSound.playAsync();
     }
   } catch (error) {
-    console.warn('Failed to play notification sound:', error);
+    // Failed to play notification sound - not critical
   }
 };
 
@@ -167,7 +162,7 @@ export const stopNotificationSound = async (): Promise<void> => {
       }
     }
   } catch (error) {
-    console.warn('Failed to stop notification sound:', error);
+    // Failed to stop notification sound - not critical
   }
 };
 

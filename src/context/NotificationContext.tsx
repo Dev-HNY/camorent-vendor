@@ -73,8 +73,8 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
 
   // Initialize notification service channels on mount
   useEffect(() => {
-    notificationService.initializeChannels().catch((error) => {
-      console.error('Failed to initialize notification channels:', error);
+    notificationService.initializeChannels().catch(() => {
+      // Failed to initialize notification channels - not critical
     });
   }, []);
 
@@ -82,11 +82,9 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const registerPushToken = async () => {
     if (expoPushToken) {
       try {
-        console.log('Registering push token with backend:', expoPushToken);
         await userService.updateDeviceToken(expoPushToken);
-        console.log('Push token registered successfully');
       } catch (error) {
-        console.error('Failed to register push token:', error);
+        // Failed to register push token - will retry later
       }
     }
   };
@@ -94,19 +92,13 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   // Don't auto-register token - wait for explicit call after user is logged in
   // This prevents 404 errors when the user doesn't exist in DynamoDB yet
   useEffect(() => {
-    if (expoPushToken) {
-      console.log('Push token available:', expoPushToken);
-      console.log('💡 Token will be registered after login/signup');
-    } else {
-      console.log('💡 Push notifications will be enabled when running in a development/production build');
-    }
+    // Token will be registered after login/signup
+    // Push notifications will be enabled when running in a development/production build
   }, [expoPushToken]);
 
   // Handle incoming notifications
   useEffect(() => {
     if (notification) {
-      console.log('Received notification:', notification);
-
       // Parse notification data
       const notificationData = notification.request?.content;
       const data = notificationData?.data || {};
@@ -202,8 +194,6 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     } else {
       setPendingSettlementsCount(prev => prev + 1);
     }
-
-    console.log(`📱 Test ${type} notification triggered`);
   };
 
   return (

@@ -127,10 +127,9 @@ export default function WelcomeScreen() {
         router.replace('/address-setup');
       } else {
         // User has completed everything
-        router.replace('/(tabs)');
+        router.replace('/(tabs)/home');
       }
     } catch (error) {
-      console.log('Auth check failed:', error);
       // Token invalid or expired, clear it and show welcome screen
       await TokenManager.clearTokens();
       setIsCheckingAuth(false);

@@ -292,8 +292,6 @@ export default function SignInScreen() {
         setSuccessMessage(response.message || 'OTP sent to your phone via SMS!');
         setShowSuccessModal(true);
       } catch (error: any) {
-        console.error('Signup error:', error);
-
         // Check if user already exists
         if (error.message?.includes('already registered') || error.message?.includes('user_exists')) {
           setErrorMessage('This phone number is already registered. Please use the Login option instead.');

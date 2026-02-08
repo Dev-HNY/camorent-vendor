@@ -291,7 +291,7 @@ export default function HistoryScreen() {
       // Check if there are more items to load
       setHasMore(buyerResponse.data.length === PAGE_SIZE || ownerResponse.data.length === PAGE_SIZE);
     } catch (error) {
-      console.error('Error fetching history bookings:', error);
+      // Error fetching history bookings - will show empty state
     } finally {
       setLoading(false);
       setLoadingMore(false);

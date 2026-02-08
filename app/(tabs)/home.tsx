@@ -15,8 +15,7 @@ import {
   KeyboardAvoidingView,
   ActivityIndicator,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter, useFocusEffect, useNavigation } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import Svg, { Path, Circle } from 'react-native-svg';
@@ -36,7 +35,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useUserStore } from '../../src/store/userStore';
 import { useOrderStore } from '../../src/store/orderStore';
-import { CreateOrderNameModal, RentalProcessLoader, RentalJourneyProgress, Skeleton } from '../../src/components';
+import { CreateOrderNameModal, Skeleton } from '../../src/components';
 import { useTheme } from '../../src/context/ThemeContext';
 import { useTranslation } from '../../src/context/LanguageContext';
 import { useNotification } from '../../src/context/NotificationContext';
@@ -504,7 +503,6 @@ const VendorBusinessCard = ({ vendorData, theme, t }: { vendorData: any; theme: 
 
 export default function VendorHomeDashboard() {
   const router = useRouter();
-  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { theme } = useTheme();
   const { t } = useTranslation();
@@ -514,8 +512,6 @@ export default function VendorHomeDashboard() {
 
   // State
   const [isCreateOrderModalVisible, setIsCreateOrderModalVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isDataLoading, setIsDataLoading] = useState(true);
   const [pickupDueCount, setPickupDueCount] = useState(0);
@@ -697,32 +693,7 @@ export default function VendorHomeDashboard() {
     setRefreshing(false);
   }, []);
 
-  useEffect(() => {
-    navigation.setOptions({ tabBarVisible: !isLoading });
-  }, [isLoading, navigation]);
-
-  useEffect(() => {
-    const checkFirstLogin = async () => {
-      try {
-        const hasSeenLoader = await AsyncStorage.getItem('hasSeenLoader');
-        if (hasSeenLoader === 'true') {
-          setIsLoading(false);
-        } else {
-          setTimeout(() => setIsDataLoaded(true), 1500);
-        }
-      } catch {
-        setTimeout(() => setIsDataLoaded(true), 1500);
-      }
-    };
-    checkFirstLogin();
-  }, []);
-
-  const handleProceedToHome = async () => {
-    try {
-      await AsyncStorage.setItem('hasSeenLoader', 'true');
-    } catch {}
-    setTimeout(() => setIsLoading(false), 300);
-  };
+  // Removed loader logic - always show home directly with skeleton loading
 
   useEffect(() => {
     const updateCountdowns = () => {
@@ -761,15 +732,6 @@ export default function VendorHomeDashboard() {
     router.push({ pathname: '/product-selection', params: { orderName } });
   };
 
-  // Loading screen
-  if (isLoading) {
-    return (
-      <Animated.View style={styles.loaderContainer} exiting={FadeOut.duration(300)}>
-        <RentalProcessLoader isDataLoaded={isDataLoaded} onProceed={handleProceedToHome} />
-      </Animated.View>
-    );
-  }
-
   const totalAlerts = pendingRequestsCount + pickupDueCount + returnPendingCount;
 
   return (
@@ -807,9 +769,6 @@ export default function VendorHomeDashboard() {
           <Text style={[styles.greetingText, { color: theme.colors.text.primary }]}>{t.home.hi}, {getUserName()}</Text>
           <Text style={[styles.greetingSubtext, { color: theme.colors.text.secondary }]}>{t.home.welcomeBack}</Text>
         </Animated.View>
-
-        {/* Rental Journey Progress with Lottie */}
-        <RentalJourneyProgress />
 
         {/* Primary Actions */}
         <View style={styles.actionsSection}>

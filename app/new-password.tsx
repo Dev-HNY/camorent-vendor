@@ -133,17 +133,15 @@ export default function NewPasswordScreen() {
       setIsLoading(true);
 
       // Reset password with backend API
-      const response = await authService.resetPassword({
+      await authService.resetPassword({
         phone_number: phoneNumber,
         verification_token: verificationToken,
         new_password: password
       });
-      console.log('Reset password response:', response);
 
       // Show success modal
       setShowSuccess(true);
     } catch (error: any) {
-      console.error('Reset password error:', error);
       setErrorMessage(error.message || 'Failed to reset password. Please try again.');
       setShowError(true);
     } finally {

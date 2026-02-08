@@ -264,7 +264,6 @@ export default function ProductSelectionScreen() {
           setSelectedCategory(categoriesResponse.data[0].id); // This is the string ID like "cameras"
         }
       } catch (error: any) {
-        console.error('Error fetching initial data:', error);
         setErrorMessage('Failed to load categories and brands. Please try again.');
         setShowError(true);
       } finally {
@@ -290,7 +289,7 @@ export default function ProductSelectionScreen() {
         setSubcategories(response.data);
         setSelectedSubcategory('All'); // Reset subcategory when category changes
       } catch (error: any) {
-        console.error('Error fetching subcategories:', error);
+        // Error fetching subcategories - not critical
       }
     };
 
@@ -319,7 +318,6 @@ export default function ProductSelectionScreen() {
         setProducts(response.data);
         setHasMoreProducts(response.data.length === PRODUCTS_PER_PAGE);
       } catch (error: any) {
-        console.error('Error fetching products:', error);
         setErrorMessage('Failed to load products. Please try again.');
         setShowError(true);
       } finally {
@@ -356,7 +354,7 @@ export default function ProductSelectionScreen() {
         setHasMoreProducts(false);
       }
     } catch (error: any) {
-      console.error('Error loading more products:', error);
+      // Error loading more products - not critical
     } finally {
       setIsLoadingMore(false);
     }
@@ -446,8 +444,6 @@ export default function ProductSelectionScreen() {
   };
 
   const handleProceed = () => {
-    console.log('Order Name:', orderName);
-    console.log('Selected Products:', selectedProducts);
     // Navigate to date selection screen
     router.push({
       pathname: '/date-selection',

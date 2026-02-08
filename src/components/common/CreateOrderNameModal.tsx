@@ -119,7 +119,6 @@ export const CreateOrderNameModal: React.FC<CreateOrderNameModalProps> = ({
         setValidationMessage(response.message);
       }
     } catch (error: any) {
-      console.error('Error validating order name:', error);
       setValidationStatus('invalid');
       setValidationMessage('Failed to validate order name. Please try again.');
     } finally {

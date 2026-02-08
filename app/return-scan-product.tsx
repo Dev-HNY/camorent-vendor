@@ -62,7 +62,6 @@ export default function ReturnScanProductScreen() {
       const totalItems = response.sku_items.reduce((sum, item) => sum + item.quantity, 0);
       setRequiredImageCount(totalItems);
     } catch (error) {
-      console.error('Error fetching booking details:', error);
       setErrorMessage(t.returnScanProduct.failedToLoadBooking);
       setShowError(true);
     } finally {
@@ -92,7 +91,6 @@ export default function ReturnScanProductScreen() {
         setSelectedFiles(prev => [...prev, ...fileUris]);
       }
     } catch (error) {
-      console.error('Gallery error:', error);
       setErrorMessage(t.returnScanProduct.failedToOpenGallery);
       setShowError(true);
     }
@@ -118,7 +116,6 @@ export default function ReturnScanProductScreen() {
         setSelectedFiles(prev => [...prev, ...fileUris]);
       }
     } catch (error) {
-      console.error('Camera error:', error);
       setErrorMessage(t.returnScanProduct.failedToOpenCamera);
       setShowError(true);
     }
@@ -140,7 +137,6 @@ export default function ReturnScanProductScreen() {
       await AsyncStorage.setItem(`return_images_${bookingId}`, JSON.stringify(selectedFiles));
       router.push(`/return-scan-challan?bookingId=${encodeURIComponent(bookingId)}&orderName=${encodeURIComponent(orderName)}`);
     } catch (error) {
-      console.error('Error saving return images:', error);
       setErrorMessage(t.returnScanProduct.failedToSaveImages);
       setShowError(true);
     }

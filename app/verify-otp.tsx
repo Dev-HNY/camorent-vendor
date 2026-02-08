@@ -99,22 +99,17 @@ export default function VerifyOTPScreen() {
     try {
       setVerifying(true);
 
-      console.log('Verifying OTP:', otpCode, 'for booking:', bookingId);
-
       // Step 1: Retrieve and upload pickup images
       try {
         const pickupImagesJson = await AsyncStorage.getItem(`pickup_images_${bookingId}`);
         if (pickupImagesJson) {
           const pickupImages: string[] = JSON.parse(pickupImagesJson);
-          console.log('Uploading pickup images:', pickupImages.length);
           await bookingService.uploadPickupImages(bookingId, pickupImages);
-          console.log('Pickup images uploaded successfully');
 
           // Clean up stored images
           await AsyncStorage.removeItem(`pickup_images_${bookingId}`);
         }
       } catch (imageError) {
-        console.error('Error uploading pickup images:', imageError);
         // Continue anyway - images are optional
       }
 
@@ -122,15 +117,12 @@ export default function VerifyOTPScreen() {
       try {
         const challanImage = await AsyncStorage.getItem(`challan_image_${bookingId}`);
         if (challanImage) {
-          console.log('Uploading challan image');
           await bookingService.uploadChallan(bookingId, challanImage);
-          console.log('Challan uploaded successfully');
 
           // Clean up stored challan
           await AsyncStorage.removeItem(`challan_image_${bookingId}`);
         }
       } catch (challanError) {
-        console.error('Error uploading challan:', challanError);
         // Continue anyway - challan is optional
       }
 
@@ -140,7 +132,6 @@ export default function VerifyOTPScreen() {
       // Show success and navigate back to home with refresh trigger
       setShowSuccess(true);
     } catch (error: any) {
-      console.error('Error confirming pickup:', error);
       setErrorMessage(error?.response?.data?.detail?.message || 'Failed to confirm pickup. Please try again.');
       setShowError(true);
     } finally {

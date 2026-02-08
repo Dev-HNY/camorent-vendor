@@ -88,13 +88,11 @@ export default function ForgotPasswordScreen() {
       const formattedPhone = `+91${phoneNumber}`;
 
       // Send OTP to phone via SMS
-      const response = await authService.forgotPassword({ phone_number: formattedPhone });
-      console.log('Forgot password response:', response);
+      await authService.forgotPassword({ phone_number: formattedPhone });
 
       // Navigate to OTP verification screen
       router.push(`/reset-password-otp?phone_number=${encodeURIComponent(formattedPhone)}`);
     } catch (error: any) {
-      console.error('Forgot password error:', error);
       setErrorMessage(error.message || 'Failed to send OTP. Please try again.');
       setShowError(true);
     } finally {

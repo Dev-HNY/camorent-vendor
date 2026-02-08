@@ -95,7 +95,6 @@ export default function VerifyReturnOTPScreen() {
       setInfoMessage(response.message || 'OTP sent to customer\'s phone successfully!');
       setShowInfo(true);
     } catch (error: any) {
-      console.error('Error requesting return OTP:', error);
       setErrorMessage(error.message || 'Failed to send OTP. Please try again.');
       setShowError(true);
     } finally {
@@ -136,17 +135,12 @@ export default function VerifyReturnOTPScreen() {
     try {
       setVerifying(true);
 
-      console.log('Verifying return OTP:', otpCode, 'for booking:', bookingId);
-
       // Verify return OTP - backend handles status change to 'completed'
-      const response = await bookingService.verifyReturnOTP(bookingId, otpCode);
-
-      console.log('Return verified:', response);
+      await bookingService.verifyReturnOTP(bookingId, otpCode);
 
       // Show success and navigate back to home
       setShowSuccess(true);
     } catch (error: any) {
-      console.error('Error verifying return OTP:', error);
       setErrorMessage(error.message || 'Invalid OTP. Please check and try again.');
       setShowError(true);
     } finally {

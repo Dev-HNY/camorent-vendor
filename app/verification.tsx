@@ -137,7 +137,6 @@ export default function VerificationScreen() {
         setGstNo(trimmedGst);
         // Store organization name from GST verification
         setOrganizationName(result.legal_name);
-        console.log('GST verified:', result);
       } else {
         setGstVerified(false);
         setGstNoError(t.verification.verificationFailed);
@@ -146,12 +145,6 @@ export default function VerificationScreen() {
       setGstVerified(false);
       const errorMsg = error.message || t.verification.verifyError;
       setGstNoError(errorMsg);
-      console.error('GST verification error:', error);
-
-      // Log authentication issues for debugging
-      if (errorMsg.includes('401') || errorMsg.includes('Unauthorized') || errorMsg.includes('authentication')) {
-        console.error('Authentication issue - user may need to log in again');
-      }
     } finally {
       setGstVerifying(false);
     }
@@ -179,7 +172,6 @@ export default function VerificationScreen() {
       // Show success modal
       setShowVerificationComplete(true);
     } catch (error: any) {
-      console.error('Profile update error:', error);
       setGstNoError(error.message || t.verification.saveFailed);
     } finally {
       setSubmitting(false);

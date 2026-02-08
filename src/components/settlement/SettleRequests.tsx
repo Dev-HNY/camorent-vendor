@@ -17,6 +17,7 @@ import {
   TextInput,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -32,6 +33,7 @@ import { useTranslation } from '../../context/LanguageContext';
 import { paymentSettlementService, Settlement } from '../../services/api/paymentSettlementService';
 import { useNotification } from '../../context/NotificationContext';
 import { SuccessModal } from '../common/SuccessModal';
+import { Notifications, isAvailable as isNotificationsAvailable } from '../../utils/notificationLoader';
 
 type ApprovalFilterType = 'pending' | 'all';
 
@@ -42,7 +44,6 @@ const AnimatedActionButton = ({
   style,
 }: {
   onPress: () => void;
-  isApprove?: boolean;
   children: React.ReactNode;
   style?: any;
 }) => {
@@ -102,6 +103,17 @@ export default function SettleRequests() {
     loadData();
     loadPendingCount(); // Always load pending count for badge
   }, []);
+
+  // ⭐ CLEAR NOTIFICATIONS WHEN SCREEN OPENS - Prevents accumulation
+  useFocusEffect(
+    useCallback(() => {
+      if (isNotificationsAvailable && Notifications?.dismissAllNotificationsAsync) {
+        Notifications.dismissAllNotificationsAsync().catch(() => {
+          // Failed to dismiss notifications - not critical
+        });
+      }
+    }, [])
+  );
 
   const loadPendingCount = async () => {
     try {
@@ -409,7 +421,7 @@ export default function SettleRequests() {
               {settlement.status === 'pending' && (
                 <View style={[styles.cardActions, { borderTopColor: theme.colors.border.light }]}>
                   <AnimatedActionButton
-                    isApprove={true}
+
                     style={[
                       styles.approveCardButton,
                       {
@@ -429,7 +441,7 @@ export default function SettleRequests() {
                   </AnimatedActionButton>
 
                   <AnimatedActionButton
-                    isApprove={false}
+
                     style={[
                       styles.rejectCardButton,
                       {
@@ -581,7 +593,7 @@ export default function SettleRequests() {
                 {selectedSettlement.status === 'pending' && (
                   <View style={styles.actionButtons}>
                     <AnimatedActionButton
-                      isApprove={true}
+  
                       style={[
                         styles.approveButton,
                         {
@@ -598,7 +610,7 @@ export default function SettleRequests() {
                     </AnimatedActionButton>
 
                     <AnimatedActionButton
-                      isApprove={false}
+  
                       style={[
                         styles.rejectButton,
                         {

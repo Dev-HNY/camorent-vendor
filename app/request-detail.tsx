@@ -3,7 +3,7 @@
  * Shows detailed booking request with Approve/Reject actions for equipment owners
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import Svg, { Path } from 'react-native-svg';
 import Animated, {
   useSharedValue,
@@ -37,6 +38,7 @@ import { useTranslation } from '../src/context/LanguageContext';
 import { SuccessModal } from '../src/components';
 import { playSuccessNotification, playErrorNotification } from '../src/utils/notificationSound';
 import { notificationService } from '../src/services/notificationService';
+import { Notifications, isAvailable as isNotificationsAvailable } from '../src/utils/notificationLoader';
 
 // Modern SVG Icons
 const ChevronLeftIcon = ({ color, size = 24 }: { color: string; size?: number }) => (
@@ -152,6 +154,17 @@ export default function RequestDetailScreen() {
       fetchBookingDetails();
     }
   }, [bookingId]);
+
+  // ⭐ CLEAR NOTIFICATIONS WHEN SCREEN OPENS - Prevents accumulation
+  useFocusEffect(
+    useCallback(() => {
+      if (isNotificationsAvailable && Notifications?.dismissAllNotificationsAsync) {
+        Notifications.dismissAllNotificationsAsync().catch(() => {
+          // Failed to dismiss notifications - not critical
+        });
+      }
+    }, [])
+  );
 
   const fetchBookingDetails = async () => {
     try {

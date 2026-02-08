@@ -91,13 +91,11 @@ export default function ResetPasswordOTPScreen() {
 
       // Verify OTP with backend
       const response = await authService.verifyResetOTP({ phone_number: phoneNumber, otp: otpCode });
-      console.log('OTP verification response:', response);
 
       // Store verification token and navigate to new password screen
       const verificationToken = response.verification_token;
       router.push(`/new-password?phone_number=${encodeURIComponent(phoneNumber)}&verification_token=${encodeURIComponent(verificationToken)}`);
     } catch (error: any) {
-      console.error('OTP verification error:', error);
       setErrorMessage(error.message || t.auth.invalidOTP);
       setShowError(true);
     } finally {
@@ -109,12 +107,10 @@ export default function ResetPasswordOTPScreen() {
     try {
       // Resend OTP by calling forgot password again
       await authService.forgotPassword({ phone_number: phoneNumber });
-      console.log('OTP resent to:', phoneNumber);
 
       setErrorMessage('OTP resent successfully to your phone!');
       setShowError(true);
     } catch (error: any) {
-      console.error('Resend OTP error:', error);
       setErrorMessage('Failed to resend OTP. Please try again.');
       setShowError(true);
     }

@@ -93,7 +93,6 @@ export default function BookingSummaryScreen() {
       setBookingCreated(true);
       setShowSuccessModal(true);
     } catch (error: any) {
-      console.error('Error creating booking:', error);
       setErrorMessage(
         error.response?.data?.detail?.message || t.errors.failed_create_booking
       );

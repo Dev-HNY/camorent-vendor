@@ -42,7 +42,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
         setLanguageState(savedLanguage);
       }
     } catch (error) {
-      console.error('Error loading language preference:', error);
+      // Error loading language preference - not critical
     }
   };
 
@@ -50,7 +50,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
     try {
       await AsyncStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
     } catch (error) {
-      console.error('Error saving language preference:', error);
+      // Error saving language preference - not critical
     }
   };
 

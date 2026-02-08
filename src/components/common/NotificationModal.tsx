@@ -292,7 +292,7 @@ export const NotificationModal: React.FC<NotificationModalProps> = ({
         Vibration.vibrate([0, 100, 50, 100]); // Pattern: wait, vibrate, wait, vibrate
       }
     } catch (error) {
-      console.log('Haptics not available');
+      // Haptics not available - not critical
     }
   };
 

@@ -14,6 +14,8 @@ import {
   Image,
   ActivityIndicator,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -113,14 +115,12 @@ export default function OTPVerificationScreen() {
       try {
         await registerPushToken();
       } catch (error) {
-        console.log('Push token registration skipped:', error);
+        // Push token registration skipped - not critical
       }
 
       // Navigate to GST/PAN verification (user is now logged in)
       router.replace('/verification');
     } catch (error: any) {
-      console.error('OTP verification error:', error);
-
       // Clear OTP on error
       setOtp(['', '', '', '']);
       inputRefs.current[0]?.focus();
@@ -152,7 +152,6 @@ export default function OTPVerificationScreen() {
       setOtpSentMessage(response.message || 'A new verification code has been sent to your phone via SMS.');
       setShowOtpSent(true);
     } catch (error: any) {
-      console.error('Resend OTP error:', error);
       setResendErrorMessage(error.message || 'Failed to resend OTP. Please try again.');
       setShowResendFailed(true);
     } finally {
@@ -161,13 +160,23 @@ export default function OTPVerificationScreen() {
   };
 
   return (
-    <View style={[styles.safeArea, { backgroundColor: appTheme.colors.background.primary, paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 20) }]}>
+    <View style={[styles.safeArea, { backgroundColor: appTheme.colors.background.primary, paddingTop: insets.top }]}>
       <StatusBar
         barStyle={themeMode === 'dark' ? 'light-content' : 'dark-content'}
         backgroundColor="transparent"
         translucent
       />
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.container}>
         {/* Logo */}
         <Animated.View entering={FadeInUp.delay(100).duration(600)} style={styles.logoContainer}>
           <Image
@@ -248,7 +257,9 @@ export default function OTPVerificationScreen() {
             disabled={!isOtpComplete() || isLoading}
           />
         </Animated.View>
-      </View>
+        </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
 
       {/* Verification Failed Modal */}
       <SuccessModal
@@ -288,9 +299,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    flex: 1,
+    flexGrow: 1,
     paddingHorizontal: 24,
     paddingTop: Platform.OS === 'android' ? 32 : 24,
+    paddingBottom: 40,
+    justifyContent: 'space-between',
   },
   logoContainer: {
     alignItems: 'center',
@@ -350,9 +363,7 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   buttonContainer: {
-    position: 'absolute',
-    bottom: Platform.OS === 'android' ? 32 : 24,
-    left: 24,
-    right: 24,
+    marginTop: 'auto',
+    paddingTop: 24,
   },
 });

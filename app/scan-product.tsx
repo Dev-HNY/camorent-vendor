@@ -64,7 +64,6 @@ export default function ScanProductScreen() {
       const totalItems = response.sku_items.reduce((sum, item) => sum + item.quantity, 0);
       setRequiredImageCount(totalItems);
     } catch (error) {
-      console.error('Error fetching booking details:', error);
       setErrorMessage(t.scanProduct.failedToLoadBooking);
       setShowError(true);
     } finally {
@@ -98,7 +97,6 @@ export default function ScanProductScreen() {
         });
       }
     } catch (error) {
-      console.error('Gallery error:', error);
       setErrorMessage(t.scanProduct.failedToOpenGallery);
       setShowError(true);
     }
@@ -128,7 +126,6 @@ export default function ScanProductScreen() {
         });
       }
     } catch (error) {
-      console.error('Camera error:', error);
       setErrorMessage(t.scanProduct.failedToOpenCamera);
       setShowError(true);
     }
@@ -150,7 +147,6 @@ export default function ScanProductScreen() {
       await AsyncStorage.setItem(`pickup_images_${bookingId}`, JSON.stringify(selectedFiles));
       router.push(`/scan-challan?bookingId=${encodeURIComponent(bookingId)}&orderName=${encodeURIComponent(orderName)}`);
     } catch (error) {
-      console.error('Error saving images:', error);
       setErrorMessage(t.scanProduct.failedToSaveImages);
       setShowError(true);
     }

@@ -15,6 +15,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Animated as RNAnimated,
+  Dimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
@@ -507,7 +508,7 @@ export default function AddressSetupScreen() {
         message={t.addressSetup.successMessage}
         onClose={() => {
           setShowSuccessModal(false);
-          router.replace('/(tabs)');
+          router.replace('/(tabs)/home');
         }}
       />
     </SafeAreaView>
@@ -587,7 +588,7 @@ const styles = StyleSheet.create({
   },
   dropdownMenu: {
     position: 'absolute',
-    top: 260,
+    top: Dimensions.get('window').height * 0.28,
     left: 20,
     right: 20,
     zIndex: 1000,
@@ -599,7 +600,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 12,
     overflow: 'hidden',
-    maxHeight: 500,
+    maxHeight: Dimensions.get('window').height * 0.5,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -632,7 +633,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   dropdownList: {
-    maxHeight: 350,
+    maxHeight: Dimensions.get('window').height * 0.4,
   },
   dropdownItem: {
     flexDirection: 'row',

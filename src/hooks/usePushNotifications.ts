@@ -14,13 +14,54 @@ import { Notifications, isAvailable as isNotificationsAvailable } from '../utils
 if (isNotificationsAvailable && Notifications?.setNotificationHandler) {
   try {
     Notifications.setNotificationHandler({
-      handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true,
-        shouldShowBanner: true,
-        shouldShowList: true,
-      }),
+      handleNotification: async (notification: any) => {
+        // ⭐ DON'T SHOW IF ALREADY ON TARGET SCREEN - Prevents notification spam
+        try {
+          const notificationData = notification.request?.content?.data;
+          const notificationType = notificationData?.type;
+          const targetScreen = notificationData?.screen;
+
+          // Get current route segments
+          const segments = (router as any).state?.routes?.[0]?.state?.routes || [];
+          const currentRoute = segments[segments.length - 1]?.name || '';
+
+          // Check if we're already on the target screen
+          let isOnTargetScreen = false;
+
+          if (targetScreen) {
+            isOnTargetScreen = currentRoute.includes(targetScreen);
+          } else if (notificationType === 'settlement' || notificationType === 'payment_settlement' || notificationType === 'settlement_request') {
+            isOnTargetScreen = currentRoute.includes('settle-payment');
+          } else if (notificationType === 'request' || notificationType === 'new_booking_request' || notificationType === 'pickup_otp' || notificationType === 'return_otp') {
+            isOnTargetScreen = currentRoute.includes('request-detail');
+          } else if (notificationData?.bookingId || notificationData?.booking_id) {
+            // Check if on order-detail or request-detail
+            isOnTargetScreen = currentRoute.includes('detail');
+          }
+
+          // Don't show notification if already on target screen
+          if (isOnTargetScreen) {
+            return {
+              shouldShowAlert: false,
+              shouldPlaySound: false,
+              shouldSetBadge: false,
+              shouldShowBanner: false,
+              shouldShowList: false,
+            };
+          }
+        } catch (error) {
+          // Route checking failed - show notification anyway
+        }
+
+        // Show notification normally
+        return {
+          shouldShowAlert: true,
+          shouldPlaySound: true,
+          shouldSetBadge: true,
+          shouldShowBanner: true,
+          shouldShowList: true,
+        };
+      },
     });
   } catch {
     // Handler setup failed - not critical
@@ -120,7 +161,17 @@ export const usePushNotifications = (): PushNotificationState => {
       }
 
       if (Notifications?.addNotificationResponseReceivedListener) {
-        responseListener.current = Notifications.addNotificationResponseReceivedListener((response: any) => {
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(async (response: any) => {
+          // ⭐ DISMISS NOTIFICATION AFTER TAP - Prevents duplicate notifications
+          const notificationId = response.notification?.request?.identifier;
+          if (notificationId && Notifications?.dismissNotificationAsync) {
+            try {
+              await Notifications.dismissNotificationAsync(notificationId);
+            } catch (error) {
+              // Failed to dismiss notification - not critical
+            }
+          }
+
           // Extract notification data
           const notificationData = response.notification?.request?.content?.data;
           const notificationType = notificationData?.type;

@@ -54,7 +54,6 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
         setThemeMode(systemTheme === 'dark' ? 'dark' : 'light');
       }
     } catch (error) {
-      console.error('Error loading theme preference:', error);
       // Fallback to system theme
       const systemTheme = Appearance.getColorScheme();
       setThemeMode(systemTheme === 'dark' ? 'dark' : 'light');
@@ -65,7 +64,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     try {
       await AsyncStorage.setItem(THEME_STORAGE_KEY, mode);
     } catch (error) {
-      console.error('Error saving theme preference:', error);
+      // Error saving theme preference - not critical
     }
   };
 
