@@ -7,7 +7,6 @@
 import { API_CONFIG, API_ERROR_MESSAGES } from '../../config/api';
 import { SecureStorage } from '../../utils/secureStorage';
 import { logger } from '../../utils/logger';
-import { refreshAccessToken } from './tokenRefresh';
 
 const TAG = 'APIClient';
 
@@ -83,7 +82,6 @@ export interface RequestConfig {
   params?: any;
   headers?: Record<string, string>;
   requiresAuth?: boolean;
-  isRetry?: boolean;
 }
 
 /**
@@ -195,21 +193,6 @@ export async function apiRequest<T = any>(
 
     // Handle HTTP errors
     if (!response.ok) {
-      // If 401 Unauthorized and we have auth, try to refresh token and retry once
-      if (response.status === 401 && requiresAuth && !config.isRetry) {
-        logger.debug(TAG, 'Got 401, attempting token refresh');
-        const refreshed = await refreshAccessToken();
-
-        if (refreshed) {
-          logger.debug(TAG, 'Token refreshed, retrying request');
-          // Retry the request with the new token
-          return apiRequest<T>({ ...config, isRetry: true });
-        } else {
-          logger.warn(TAG, 'Token refresh failed, clearing tokens');
-          await TokenManager.clearTokens();
-        }
-      }
-
       return {
         error: responseData.detail?.message || responseData.message || API_ERROR_MESSAGES.SERVER_ERROR,
         data: responseData,

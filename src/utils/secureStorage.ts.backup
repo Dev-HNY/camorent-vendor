@@ -1,5 +1,5 @@
 /**
- * Secure Storage Utility (IMPROVED - Fixed fallback consistency)
+ * Secure Storage Utility
  * Uses expo-secure-store for sensitive data (tokens, credentials)
  * Falls back to AsyncStorage for non-sensitive data
  * Industry-grade security for production apps
@@ -44,22 +44,14 @@ export const SecureStorage = {
       const isAvailable = await isSecureStoreAvailable();
       if (isAvailable) {
         await SecureStore.setItemAsync(key, value, SECURE_OPTIONS);
-        logger.debug(TAG, `Stored in SecureStore: ${key}`);
       } else {
-        // Fallback to AsyncStorage - USE SAME KEY for consistency
+        // Fallback to AsyncStorage with warning
         logger.warn(TAG, `SecureStore not available, using AsyncStorage for: ${key}`);
-        await AsyncStorage.setItem(key, value);
+        await AsyncStorage.setItem(`__secure_${key}`, value);
       }
     } catch (error) {
       logger.error(TAG, `Failed to set secure item: ${key}`, error);
-      // Fallback to AsyncStorage on error
-      try {
-        await AsyncStorage.setItem(key, value);
-        logger.warn(TAG, `Fell back to AsyncStorage for: ${key}`);
-      } catch (fallbackError) {
-        logger.error(TAG, `AsyncStorage fallback also failed: ${key}`, fallbackError);
-        throw error;
-      }
+      throw error;
     }
   },
 
@@ -70,27 +62,13 @@ export const SecureStorage = {
     try {
       const isAvailable = await isSecureStoreAvailable();
       if (isAvailable) {
-        const value = await SecureStore.getItemAsync(key);
-        if (value) {
-          logger.debug(TAG, `Retrieved from SecureStore: ${key}`);
-          return value;
-        }
+        return await SecureStore.getItemAsync(key);
+      } else {
+        return await AsyncStorage.getItem(`__secure_${key}`);
       }
-
-      // Try AsyncStorage as fallback (USE SAME KEY)
-      const fallbackValue = await AsyncStorage.getItem(key);
-      if (fallbackValue) {
-        logger.debug(TAG, `Retrieved from AsyncStorage fallback: ${key}`);
-      }
-      return fallbackValue;
     } catch (error) {
       logger.error(TAG, `Failed to get secure item: ${key}`, error);
-      // Try AsyncStorage as last resort
-      try {
-        return await AsyncStorage.getItem(key);
-      } catch {
-        return null;
-      }
+      return null;
     }
   },
 
@@ -102,17 +80,12 @@ export const SecureStorage = {
       const isAvailable = await isSecureStoreAvailable();
       if (isAvailable) {
         await SecureStore.deleteItemAsync(key);
+      } else {
+        await AsyncStorage.removeItem(`__secure_${key}`);
       }
-      // Also delete from AsyncStorage to ensure cleanup
-      await AsyncStorage.removeItem(key);
     } catch (error) {
       logger.error(TAG, `Failed to delete secure item: ${key}`, error);
-      // Try AsyncStorage anyway
-      try {
-        await AsyncStorage.removeItem(key);
-      } catch {
-        // Ignore
-      }
+      throw error;
     }
   },
 
