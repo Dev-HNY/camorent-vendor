@@ -138,7 +138,6 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            // Always use release signing for production builds
             signingConfig signingConfigs.release
             shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
             minifyEnabled enableProguardInReleaseBuilds

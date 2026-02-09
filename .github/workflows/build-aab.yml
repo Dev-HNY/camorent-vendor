@@ -35,15 +35,10 @@ jobs:
       - name: TypeScript check
         run: npx tsc --noEmit --skipLibCheck
 
-      - name: Backup keystore before prebuild
+      - name: Decode and setup keystore
         run: |
-          if [ -f "android/app/camorent-upload-key.keystore" ]; then
-            cp android/app/camorent-upload-key.keystore /tmp/camorent-upload-key.keystore
-            echo "✅ Keystore backed up"
-          else
-            echo "❌ Keystore not found in repo!"
-            exit 1
-          fi
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > /tmp/camorent-upload-key.keystore
+          echo "✅ Keystore decoded from secrets"
 
       - name: Run prebuild
         run: npx expo prebuild --platform android --clean
@@ -57,13 +52,17 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
-      - name: Configure Gradle for CI
+      - name: Configure Gradle for CI and signing
         run: |
           echo "org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m -XX:+HeapDumpOnOutOfMemoryError" >> android/gradle.properties
           echo "org.gradle.daemon=false" >> android/gradle.properties
           echo "org.gradle.configureondemand=true" >> android/gradle.properties
           echo "kotlin.incremental=false" >> android/gradle.properties
-          echo "✅ Gradle CI configuration added"
+          echo "CAMORENT_UPLOAD_STORE_FILE=camorent-upload-key.keystore" >> android/gradle.properties
+          echo "CAMORENT_UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> android/gradle.properties
+          echo "CAMORENT_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> android/gradle.properties
+          echo "CAMORENT_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> android/gradle.properties
+          echo "✅ Gradle CI configuration and signing credentials added"
 
       - name: Build APK
         run: |
