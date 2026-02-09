@@ -3,7 +3,8 @@
  * Handles all vendor authentication related API calls
  */
 
-import { apiClient, TokenManager } from './client';
+import { apiClient } from './client';
+import { TokenManager } from './tokenManager';
 import { API_ENDPOINTS } from '../../config/api';
 
 // Request Types

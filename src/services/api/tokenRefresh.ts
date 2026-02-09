@@ -4,7 +4,7 @@
  */
 
 import { API_CONFIG } from '../../config/api';
-import { TokenManager } from './client';
+import { TokenManager } from './tokenManager';
 import { logger } from '../../utils/logger';
 
 const TAG = 'TokenRefresh';

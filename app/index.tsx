@@ -30,7 +30,7 @@ import { useTheme } from '../src/context/ThemeContext';
 import { useLanguage } from '../src/context/LanguageContext';
 import type { Language } from '../src/context/LanguageContext';
 import { authService } from '../src/services/api/authService';
-import { TokenManager } from '../src/services/api/client';
+import { TokenManager } from '../src/services/api/tokenManager';
 import { useUserStore } from '../src/store/userStore';
 
 // Modern SVG Icons

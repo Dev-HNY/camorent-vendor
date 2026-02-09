@@ -7,7 +7,7 @@ import Constants from 'expo-constants';
 
 // Production API Configuration
 const PRODUCTION_CONFIG = {
-  API_BASE_URL: 'api.camorent.co.in',
+  API_BASE_URL: 'https://api.camorent.co.in',
   API_TIMEOUT: 30000,
   ENABLE_LOGGING: __DEV__, // Enable logging only in development mode
   ENABLE_CRASHLYTICS: true,

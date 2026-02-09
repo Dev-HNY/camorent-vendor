@@ -3,7 +3,8 @@
  * Handles payment settlement operations for vendor bookings
  */
 
-import { apiClient, TokenManager } from './client';
+import { apiClient } from './client';
+import { TokenManager } from './tokenManager';
 import { API_CONFIG } from '../../config/api';
 import { logger } from '../../utils/logger';
 

@@ -1,4 +1,4 @@
-name: Build Android APK & AAB
+name: Build Android AAB
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build Android APK & AAB
+    name: Build Android AAB
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -71,19 +71,10 @@ jobs:
           echo "CAMORENT_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> android/gradle.properties
           echo "✅ Gradle CI configuration and signing credentials added"
 
-      - name: Build APK
-        run: |
-          cd android
-          ./gradlew clean assembleRelease --stacktrace --no-daemon --max-workers=2
-        env:
-          NODE_ENV: 'production'
-          NODE_OPTIONS: '--max-old-space-size=8192'
-          GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:MaxMetaspaceSize=1024m"'
-
       - name: Build AAB (Android App Bundle)
         run: |
           cd android
-          ./gradlew bundleRelease --stacktrace --no-daemon --max-workers=2
+          ./gradlew clean bundleRelease --stacktrace --no-daemon --max-workers=2
         env:
           NODE_ENV: 'production'
           NODE_OPTIONS: '--max-old-space-size=8192'
@@ -91,17 +82,8 @@ jobs:
 
       - name: Verify signing
         run: |
-          echo "--- Checking APK signing ---"
-          jarsigner -verify android/app/build/outputs/apk/release/app-release.apk || true
           echo "--- Checking AAB signing ---"
           jarsigner -verify android/app/build/outputs/bundle/release/app-release.aab || true
-
-      - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
-          retention-days: 30
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
