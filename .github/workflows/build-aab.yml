@@ -35,7 +35,7 @@ jobs:
       - name: TypeScript check
         run: npx tsc --noEmit --skipLibCheck
 
-      - name: Decode and setup keystore
+      - name: Decode keystore from secrets
         run: |
           echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > /tmp/camorent-upload-key.keystore
           echo "✅ Keystore decoded from secrets"
@@ -43,11 +43,18 @@ jobs:
       - name: Run prebuild
         run: npx expo prebuild --platform android --clean
 
-      - name: Restore keystore after prebuild
+      - name: Copy keystore into android/app
         run: |
           cp /tmp/camorent-upload-key.keystore android/app/camorent-upload-key.keystore
-          echo "✅ Keystore restored"
+          echo "✅ Keystore copied to android/app/"
           ls -lh android/app/camorent-upload-key.keystore
+
+      - name: Patch build.gradle for release signing
+        run: |
+          python3 scripts/patch-signing.py
+          echo "--- Verifying patch ---"
+          grep "signingConfig " android/app/build.gradle
+          echo "Expected: line 1 = signingConfigs.debug (debug build), line 2 = signingConfigs.release (release build)"
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
@@ -81,6 +88,13 @@ jobs:
           NODE_ENV: 'production'
           NODE_OPTIONS: '--max-old-space-size=8192'
           GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:MaxMetaspaceSize=1024m"'
+
+      - name: Verify signing
+        run: |
+          echo "--- Checking APK signing ---"
+          jarsigner -verify android/app/build/outputs/apk/release/app-release.apk || true
+          echo "--- Checking AAB signing ---"
+          jarsigner -verify android/app/build/outputs/bundle/release/app-release.aab || true
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
