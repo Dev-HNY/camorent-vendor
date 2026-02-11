@@ -57,7 +57,7 @@
         "backgroundColor": "#565caa"
       },
       "package": "com.camorentvendor.app",
-      "versionCode": 4,
+      "versionCode": 5,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
