@@ -45,11 +45,11 @@
             "enableProguardInReleaseBuilds": true,
             "enableShrinkResourcesInReleaseBuilds": false,
             "newArchEnabled": false,
-            "enableMinifyInReleaseBuilds": true,
-            "ndkVersion": "27.2.12479018"
+            "enableMinifyInReleaseBuilds": true
           }
         }
-      ]
+      ],
+      "./plugins/withAndroid16KBPageSize.js"
     ],
     "android": {
       "adaptiveIcon": {
@@ -57,7 +57,7 @@
         "backgroundColor": "#565caa"
       },
       "package": "com.camorentvendor.app",
-      "versionCode": 5,
+      "versionCode": 6,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",

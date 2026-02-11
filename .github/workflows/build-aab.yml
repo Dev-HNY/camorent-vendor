@@ -56,12 +56,6 @@ jobs:
           grep "signingConfig " android/app/build.gradle
           echo "Expected: line 1 = signingConfigs.debug (debug build), line 2 = signingConfigs.release (release build)"
 
-      - name: Patch NDK version for 16KB page size support
-        run: |
-          sed -i 's/ndkVersion = "26.1.10909125"/ndkVersion = "27.2.12479018"/' android/build.gradle
-          echo "--- Verifying NDK patch ---"
-          grep "ndkVersion" android/build.gradle
-
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
