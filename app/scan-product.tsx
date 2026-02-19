@@ -10,7 +10,7 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-  Platform,
+  
   TouchableOpacity,
   ScrollView,
   Image,

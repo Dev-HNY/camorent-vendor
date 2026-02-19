@@ -10,7 +10,7 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-  Platform,
+  
   TouchableOpacity,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';

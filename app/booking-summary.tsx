@@ -11,7 +11,7 @@ import {
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  Platform,
+  
   ScrollView,
   ActivityIndicator,
   SafeAreaView,
