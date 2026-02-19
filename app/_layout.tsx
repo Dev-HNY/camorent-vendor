@@ -5,8 +5,9 @@
  */
 
 import { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { useUserStore } from '../src/store/userStore';
 import { useFonts } from 'expo-font';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider } from '../src/context/ThemeContext';
@@ -24,6 +25,7 @@ disableConsoleInProduction();
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const { sessionExpired, clearSessionExpired } = useUserStore();
   const [fontsLoaded, fontError] = useFonts({
     'Geist-Regular': require('../assets/fonts/Geist-Regular.otf'),
     'Geist-Medium': require('../assets/fonts/Geist-Medium.otf'),
@@ -36,6 +38,14 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
+
+  // When token refresh fails anywhere in the app, redirect to login
+  useEffect(() => {
+    if (sessionExpired) {
+      clearSessionExpired();
+      router.replace('/login');
+    }
+  }, [sessionExpired]);
 
   if (!fontsLoaded && !fontError) {
     return null;

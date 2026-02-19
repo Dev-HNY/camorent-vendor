@@ -30,16 +30,20 @@ export interface UserProfile {
 
 interface UserState {
   user: UserProfile | null;
+  sessionExpired: boolean;
   setUserProfile: (profile: Partial<UserProfile>) => void;
   updateUserProfile: (updates: Partial<UserProfile>) => void;
   clearUserProfile: () => void;
   isAuthenticated: () => boolean;
+  forceLogout: () => void;
+  clearSessionExpired: () => void;
 }
 
 export const useUserStore = create<UserState>()(
   persist(
     (set, get) => ({
       user: null,
+      sessionExpired: false,
 
       setUserProfile: (profile) =>
         set({
@@ -70,6 +74,10 @@ export const useUserStore = create<UserState>()(
         })),
 
       clearUserProfile: () => set({ user: null }),
+
+      forceLogout: () => set({ user: null, sessionExpired: true }),
+
+      clearSessionExpired: () => set({ sessionExpired: false }),
 
       isAuthenticated: () => {
         const { user } = get();

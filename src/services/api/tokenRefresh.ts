@@ -32,15 +32,22 @@ export async function refreshAccessToken(): Promise<boolean> {
         return false;
       }
 
+      const phoneNumber = await TokenManager.getPhoneNumber();
+      if (!phoneNumber) {
+        logger.warn(TAG, 'No phone number stored, cannot refresh token');
+        await TokenManager.clearTokens();
+        return false;
+      }
+
       logger.debug(TAG, 'Attempting to refresh access token');
 
-      // Call refresh token endpoint
+      // Call refresh token endpoint — phone_number is required by the backend for SECRET_HASH
       const response = await fetch(`${API_CONFIG.BASE_URL}/vendors/auth/refresh-token`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ refresh_token: refreshToken }),
+        body: JSON.stringify({ refresh_token: refreshToken, phone_number: phoneNumber }),
       });
 
       if (!response.ok) {

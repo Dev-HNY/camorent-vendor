@@ -99,7 +99,7 @@ export default function ConfirmReturnScreen() {
     }
     const selectedBooking = bookings.find(b => b.vendor_booking_id === selectedBookingId);
     if (selectedBooking) {
-      router.push(`/return-scan-product?bookingId=${encodeURIComponent(selectedBookingId)}&orderName=${encodeURIComponent(selectedBooking.order_name)}`);
+      router.replace(`/return-scan-product?bookingId=${encodeURIComponent(selectedBookingId)}&orderName=${encodeURIComponent(selectedBooking.order_name)}`);
     }
   };
 
@@ -198,7 +198,6 @@ export default function ConfirmReturnScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   scrollView: {
     flex: 1,

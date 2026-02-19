@@ -12,6 +12,7 @@ const TAG = 'TokenManager';
 // Storage keys
 const TOKEN_KEY = 'auth_token';
 const REFRESH_TOKEN_KEY = 'refresh_token';
+const PHONE_NUMBER_KEY = 'auth_phone_number';
 
 /**
  * Token management with secure storage
@@ -51,9 +52,26 @@ export const TokenManager = {
     }
   },
 
+  async getPhoneNumber(): Promise<string | null> {
+    try {
+      return await SecureStorage.getItem(PHONE_NUMBER_KEY);
+    } catch (error) {
+      logger.error(TAG, 'Error getting phone number', error);
+      return null;
+    }
+  },
+
+  async setPhoneNumber(phoneNumber: string): Promise<void> {
+    try {
+      await SecureStorage.setItem(PHONE_NUMBER_KEY, phoneNumber);
+    } catch (error) {
+      logger.error(TAG, 'Error setting phone number', error);
+    }
+  },
+
   async clearTokens(): Promise<void> {
     try {
-      await SecureStorage.deleteItems([TOKEN_KEY, REFRESH_TOKEN_KEY]);
+      await SecureStorage.deleteItems([TOKEN_KEY, REFRESH_TOKEN_KEY, PHONE_NUMBER_KEY]);
     } catch (error) {
       logger.error(TAG, 'Error clearing tokens', error);
     }

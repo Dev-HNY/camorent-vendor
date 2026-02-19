@@ -135,7 +135,7 @@ export default function ReturnScanProductScreen() {
     // Store return images for later upload
     try {
       await AsyncStorage.setItem(`return_images_${bookingId}`, JSON.stringify(selectedFiles));
-      router.push(`/return-scan-challan?bookingId=${encodeURIComponent(bookingId)}&orderName=${encodeURIComponent(orderName)}`);
+      router.replace(`/return-scan-challan?bookingId=${encodeURIComponent(bookingId)}&orderName=${encodeURIComponent(orderName)}`);
     } catch (error) {
       setErrorMessage(t.returnScanProduct.failedToSaveImages);
       setShowError(true);
@@ -282,7 +282,6 @@ export default function ReturnScanProductScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   loadingContainer: {
     flex: 1,

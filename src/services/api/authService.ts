@@ -133,13 +133,14 @@ export const authService = {
 
       const loginData = response.data!;
 
-      // Store tokens
+      // Store tokens and phone number (phone number is required for token refresh)
       if (loginData.id_token) {
         await TokenManager.setToken(loginData.id_token);
       }
       if (loginData.refresh_token) {
         await TokenManager.setRefreshToken(loginData.refresh_token);
       }
+      await TokenManager.setPhoneNumber(data.phone_number);
 
       return loginData;
     } catch (error: any) {
@@ -275,13 +276,14 @@ export const authService = {
 
       const loginData = response.data!;
 
-      // Store tokens (auto-login after signup)
+      // Store tokens and phone number (phone number is required for token refresh)
       if (loginData.id_token) {
         await TokenManager.setToken(loginData.id_token);
       }
       if (loginData.refresh_token) {
         await TokenManager.setRefreshToken(loginData.refresh_token);
       }
+      await TokenManager.setPhoneNumber(data.phone_number);
 
       return loginData;
     } catch (error: any) {

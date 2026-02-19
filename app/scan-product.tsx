@@ -145,7 +145,7 @@ export default function ScanProductScreen() {
     // Store product images for later upload
     try {
       await AsyncStorage.setItem(`pickup_images_${bookingId}`, JSON.stringify(selectedFiles));
-      router.push(`/scan-challan?bookingId=${encodeURIComponent(bookingId)}&orderName=${encodeURIComponent(orderName)}`);
+      router.replace(`/scan-challan?bookingId=${encodeURIComponent(bookingId)}&orderName=${encodeURIComponent(orderName)}`);
     } catch (error) {
       setErrorMessage(t.scanProduct.failedToSaveImages);
       setShowError(true);
@@ -316,7 +316,6 @@ const CARD_WIDTH = (SCREEN_WIDTH - spacing.lg * 2 - spacing.sm) / 2;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   loadingContainer: {
     flex: 1,

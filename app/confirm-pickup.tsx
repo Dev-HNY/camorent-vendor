@@ -10,7 +10,6 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
-  Platform,
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
@@ -204,7 +203,6 @@ export default function ConfirmPickupScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   scrollView: {
     flex: 1,

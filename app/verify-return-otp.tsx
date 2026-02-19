@@ -20,7 +20,9 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Svg, { Path, Circle } from 'react-native-svg';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { bookingService } from '../src/services/api/bookingService';
 import { scaleWidth, scaleHeight, spacing, fontSize } from '../src/utils/responsive';
 import { useTheme } from '../src/context/ThemeContext';
@@ -64,6 +66,7 @@ const PackageIcon = ({ color = '#565CAA', size = 32 }: { color?: string; size?: 
 export default function VerifyReturnOTPScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
   const bookingId = params.bookingId as string;
@@ -135,7 +138,30 @@ export default function VerifyReturnOTPScreen() {
     try {
       setVerifying(true);
 
-      // Verify return OTP - backend handles status change to 'completed'
+      // Step 1: Upload return product images
+      try {
+        const returnImagesJson = await AsyncStorage.getItem(`return_images_${bookingId}`);
+        if (returnImagesJson) {
+          const returnImages: string[] = JSON.parse(returnImagesJson);
+          await bookingService.uploadReturnImages(bookingId, returnImages);
+          await AsyncStorage.removeItem(`return_images_${bookingId}`);
+        }
+      } catch {
+        // Continue - images are optional
+      }
+
+      // Step 2: Upload return challan image
+      try {
+        const returnChallanImage = await AsyncStorage.getItem(`return_challan_image_${bookingId}`);
+        if (returnChallanImage) {
+          await bookingService.uploadReturnChallan(bookingId, returnChallanImage);
+          await AsyncStorage.removeItem(`return_challan_image_${bookingId}`);
+        }
+      } catch {
+        // Continue - challan is optional
+      }
+
+      // Step 3: Verify return OTP - backend handles status change to 'completed'
       await bookingService.verifyReturnOTP(bookingId, otpCode);
 
       // Show success and navigate back to home
@@ -168,7 +194,7 @@ export default function VerifyReturnOTPScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={[styles.content, { backgroundColor: theme.colors.background.secondary }]}>
+          <View style={[styles.content, { backgroundColor: theme.colors.background.secondary, paddingBottom: spacing.lg + insets.bottom }]}>
             {/* Info Card */}
             <View style={[styles.infoCard, { backgroundColor: theme.colors.background.primary }]}>
               <View style={styles.infoIconContainer}>
@@ -314,7 +340,6 @@ export default function VerifyReturnOTPScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   keyboardView: {
     flex: 1,

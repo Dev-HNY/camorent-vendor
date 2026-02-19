@@ -209,6 +209,11 @@ export default function OwnerSelectionScreen() {
               <Text style={[styles.ownersListTitle, { color: theme.colors.text.primary }]}>
                 {t.ownerSelection.available_owners} ({filteredOwners.length})
               </Text>
+              {!selectedOwnerId && filteredOwners.length > 0 && (
+                <Text style={[styles.selectHint, { color: theme.colors.text.secondary }]}>
+                  {t.ownerSelection.select_hint}
+                </Text>
+              )}
 
               {filteredOwners.length === 0 ? (
                 <EmptyState
@@ -416,6 +421,10 @@ const styles = StyleSheet.create({
   ownersListTitle: {
     fontSize: 16,
     fontWeight: '700',
+    marginBottom: 4,
+  },
+  selectHint: {
+    fontSize: 13,
     marginBottom: 12,
   },
   ownerCard: {

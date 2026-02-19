@@ -20,7 +20,9 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Svg, { Path, Circle } from 'react-native-svg';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { bookingService } from '../src/services/api/bookingService';
 import { scaleWidth, scaleHeight, spacing, fontSize } from '../src/utils/responsive';
 import { useTheme } from '../src/context/ThemeContext';
@@ -63,6 +65,7 @@ const LockIcon = ({ color = '#565CAA', size = 32 }: { color?: string; size?: num
 export default function VerifyPickupOTPScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const insets = useSafeAreaInsets();
   const { theme, themeMode } = useTheme();
   const { t } = useTranslation();
   const bookingId = params.bookingId as string;
@@ -138,7 +141,30 @@ export default function VerifyPickupOTPScreen() {
     try {
       setVerifying(true);
 
-      // Verify pickup OTP - backend handles status change to 'in_progress'
+      // Step 1: Upload pickup product images
+      try {
+        const pickupImagesJson = await AsyncStorage.getItem(`pickup_images_${bookingId}`);
+        if (pickupImagesJson) {
+          const pickupImages: string[] = JSON.parse(pickupImagesJson);
+          await bookingService.uploadPickupImages(bookingId, pickupImages);
+          await AsyncStorage.removeItem(`pickup_images_${bookingId}`);
+        }
+      } catch {
+        // Continue - images are optional
+      }
+
+      // Step 2: Upload challan image
+      try {
+        const challanImage = await AsyncStorage.getItem(`challan_image_${bookingId}`);
+        if (challanImage) {
+          await bookingService.uploadChallan(bookingId, challanImage);
+          await AsyncStorage.removeItem(`challan_image_${bookingId}`);
+        }
+      } catch {
+        // Continue - challan is optional
+      }
+
+      // Step 3: Verify pickup OTP - backend handles status change to 'in_progress'
       await bookingService.verifyPickupOTP(bookingId, otpCode);
 
       // Note: Return OTP notification is shown to owner when they view the booking
@@ -178,7 +204,7 @@ export default function VerifyPickupOTPScreen() {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={[styles.content, { backgroundColor: theme.colors.background.secondary }]}>
+          <View style={[styles.content, { backgroundColor: theme.colors.background.secondary, paddingBottom: spacing.lg + insets.bottom }]}>
             {/* Info Card */}
             <View style={[styles.infoCard, { backgroundColor: theme.colors.background.primary }]}>
               <View style={styles.infoIconContainer}>
@@ -325,7 +351,6 @@ export default function VerifyPickupOTPScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   keyboardView: {
     flex: 1,

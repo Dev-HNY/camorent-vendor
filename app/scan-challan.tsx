@@ -107,8 +107,8 @@ export default function ScanChallanScreen() {
   };
 
   const navigateToOTP = () => {
-    // Navigate to pickup OTP verification screen (customer OTP)
-    router.push(`/verify-pickup-otp?bookingId=${encodeURIComponent(bookingId)}&orderName=${encodeURIComponent(orderName)}`);
+    // Use replace so back button from verify-pickup-otp goes to tabs, not back here
+    router.replace(`/verify-pickup-otp?bookingId=${encodeURIComponent(bookingId)}&orderName=${encodeURIComponent(orderName)}`);
   };
 
   return (
@@ -190,7 +190,6 @@ export default function ScanChallanScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   content: {
     flex: 1,

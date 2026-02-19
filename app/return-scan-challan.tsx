@@ -103,8 +103,8 @@ export default function ReturnScanChallanScreen() {
   };
 
   const navigateToOTP = () => {
-    // Navigate to OTP verification screen for return
-    router.push(`/verify-return-otp?bookingId=${encodeURIComponent(bookingId)}&orderName=${encodeURIComponent(orderName)}`);
+    // Use replace so back button from verify-return-otp goes to tabs, not back here
+    router.replace(`/verify-return-otp?bookingId=${encodeURIComponent(bookingId)}&orderName=${encodeURIComponent(orderName)}`);
   };
 
   return (
@@ -186,7 +186,6 @@ export default function ReturnScanChallanScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   content: {
     flex: 1,

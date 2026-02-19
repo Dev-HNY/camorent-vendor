@@ -8,6 +8,7 @@ import { API_CONFIG, API_ERROR_MESSAGES } from '../../config/api';
 import { logger } from '../../utils/logger';
 import { TokenManager } from './tokenManager';
 import { refreshAccessToken } from './tokenRefresh';
+import { useUserStore } from '../../store/userStore';
 
 const TAG = 'APIClient';
 
@@ -156,8 +157,10 @@ export async function apiRequest<T = any>(
           // Retry the request with the new token
           return apiRequest<T>({ ...config, isRetry: true });
         } else {
-          logger.warn(TAG, 'Token refresh failed, clearing tokens');
+          logger.warn(TAG, 'Token refresh failed, forcing logout');
           await TokenManager.clearTokens();
+          // Signal the app to redirect to login — works from outside React components
+          useUserStore.getState().forceLogout();
         }
       }
 

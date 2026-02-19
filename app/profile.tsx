@@ -27,6 +27,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useUserStore } from '../src/store/userStore';
+import { authService } from '../src/services/api/authService';
 import { useTheme } from '../src/context/ThemeContext';
 import { useLanguage } from '../src/context/LanguageContext';
 import type { Language } from '../src/context/LanguageContext';
@@ -301,8 +302,9 @@ export default function ProfileScreen() {
     transform: [{ scale: logoutScale.value }],
   }));
 
-  const handleLogout = () => {
-    clearUserProfile();
+  const handleLogout = async () => {
+    await authService.logout(); // clears tokens from SecureStore
+    clearUserProfile();         // clears Zustand store
     router.replace('/login');
   };
 
