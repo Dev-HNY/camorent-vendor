@@ -75,8 +75,8 @@ module.exports = function withAndroid16KBPageSize(config) {
     if (config.modResults.language === 'groovy') {
       let buildGradle = config.modResults.contents;
 
-      // Check if already configured
-      if (buildGradle.includes('useLegacyPackaging')) {
+      // Check if already explicitly configured with false
+      if (buildGradle.includes('useLegacyPackaging false')) {
         return config;
       }
 
