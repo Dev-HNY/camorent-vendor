@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Apply patches
+        run: npx patch-package
+
       - name: TypeScript check
         run: npx tsc --noEmit --skipLibCheck
 
@@ -42,6 +45,18 @@ jobs:
 
       - name: Run prebuild
         run: npx expo prebuild --platform android --clean
+
+      - name: Patch NDK to 27.2 for 16KB page size support
+        run: |
+          sed -i 's/ndkVersion = "26.1.10909125"/ndkVersion = "27.2.12479018"/' android/build.gradle
+          echo "✅ NDK patched to 27.2"
+          grep "ndkVersion" android/build.gradle
+
+      - name: Install NDK 27.2
+        run: |
+          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "ndk;27.2.12479018" || \
+          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;27.2.12479018"
+          echo "✅ NDK 27.2 installed"
 
       - name: Copy keystore into android/app
         run: |
