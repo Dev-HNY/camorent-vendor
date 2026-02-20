@@ -1,5 +1,5 @@
 diff --git a/node_modules/react-native-reanimated/android/CMakeLists.txt b/node_modules/react-native-reanimated/android/CMakeLists.txt
-index 8ba4122..452807b 100644
+index 8ba4122..a40f18f 100644
 --- a/node_modules/react-native-reanimated/android/CMakeLists.txt
 +++ b/node_modules/react-native-reanimated/android/CMakeLists.txt
 @@ -20,7 +20,7 @@ endif()
@@ -7,7 +7,7 @@ index 8ba4122..452807b 100644
  string(APPEND CMAKE_CXX_FLAGS " -DREACT_NATIVE_MINOR_VERSION=${REACT_NATIVE_MINOR_VERSION} -DREANIMATED_VERSION=${REANIMATED_VERSION} -DHERMES_ENABLE_DEBUGGER=${HERMES_ENABLE_DEBUGGER}")
 
 -string(APPEND CMAKE_CXX_FLAGS " -fexceptions -fno-omit-frame-pointer -frtti -fstack-protector-all -std=c++${CMAKE_CXX_STANDARD} -Wall -Werror")
-+string(APPEND CMAKE_CXX_FLAGS " -fexceptions -fno-omit-frame-pointer -frtti -fstack-protector-all -std=c++${CMAKE_CXX_STANDARD} -Wall -Werror -Wno-vla-cxx-extension")
++string(APPEND CMAKE_CXX_FLAGS " -fexceptions -fno-omit-frame-pointer -frtti -fstack-protector-all -std=c++${CMAKE_CXX_STANDARD} -Wall -Wno-vla-cxx-extension -Wno-deprecated-this-capture")
 
  if(${IS_NEW_ARCHITECTURE_ENABLED})
      string(APPEND CMAKE_CXX_FLAGS " -DRCT_NEW_ARCH_ENABLED")
