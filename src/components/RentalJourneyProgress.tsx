@@ -61,7 +61,7 @@ const RentalCard = React.memo(({
   }, [isActive]);
 
   // Brand color gradients with darker background
-  const gradientColors = themeMode === 'dark'
+  const gradientColors: [string, string, ...string[]] = themeMode === 'dark'
     ? ['rgba(40, 45, 80, 0.95)', 'rgba(35, 40, 70, 0.98)', 'rgba(30, 35, 60, 1)']
     : ['rgba(50, 55, 90, 0.92)', 'rgba(45, 50, 80, 0.95)', 'rgba(40, 45, 70, 0.98)'];
 

@@ -523,7 +523,7 @@ class NotificationService {
             allowAlert: true,
             allowBadge: true,
             allowSound: true,
-            allowAnnouncements: true,
+            // allowAnnouncements removed in expo-notifications SDK 52
             allowCriticalAlerts: true, // iOS critical alerts
             allowProvisional: false,
           },

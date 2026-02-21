@@ -261,7 +261,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     }
   };
 
-  const getConfirmButtonColors = () => {
+  const getConfirmButtonColors = (): [string, string, ...string[]] => {
     switch (type) {
       case 'danger':
       case 'reject':
