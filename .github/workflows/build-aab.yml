@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.18.1'
+          node-version: '18'
           cache: 'npm'
 
       - name: Setup Java
@@ -32,44 +32,36 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Apply patches
-        run: npx patch-package
-
       - name: TypeScript check
         run: npx tsc --noEmit --skipLibCheck
 
-      - name: Decode keystore from secrets
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > /tmp/camorent-upload-key.keystore
-          echo "✅ Keystore decoded from secrets"
-
-      - name: Run prebuild
+      - name: Generate Android project
         run: npx expo prebuild --platform android --clean
 
-      - name: Patch NDK to 27.2 for 16KB page size support
+      - name: Patch expo-modules-core for 16KB page size support
         run: |
-          sed -i 's/ndkVersion = "26.1.10909125"/ndkVersion = "27.2.12479018"/' android/build.gradle
-          echo "✅ NDK patched to 27.2"
-          grep "ndkVersion" android/build.gradle
+          python3 - << 'PYEOF'
+          import os
+          cmake_file = "node_modules/expo-modules-core/android/CMakeLists.txt"
+          with open(cmake_file, "r") as f:
+              content = f.read()
+          if "max-page-size" in content:
+              print("Already patched")
+          else:
+              patch = "\n# 16KB page size support (Android 15+)\nif(ANDROID)\n  target_link_options(${PACKAGE_NAME} PRIVATE \"-Wl,-z,max-page-size=16384\")\nendif()\n"
+              with open(cmake_file, "a") as f:
+                  f.write(patch)
+              print("Patched CMakeLists.txt successfully")
+              with open(cmake_file, "r") as f:
+                  lines = f.readlines()
+              print("Last 6 lines:")
+              print("".join(lines[-6:]))
+          PYEOF
 
-      - name: Install NDK 27.2
+      - name: Decode keystore from secrets
         run: |
-          echo "y" | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager "ndk;27.2.12479018" || \
-          echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "ndk;27.2.12479018"
-          echo "✅ NDK 27.2 installed"
-
-      - name: Copy keystore into android/app
-        run: |
-          cp /tmp/camorent-upload-key.keystore android/app/camorent-upload-key.keystore
-          echo "✅ Keystore copied to android/app/"
-          ls -lh android/app/camorent-upload-key.keystore
-
-      - name: Patch build.gradle for release signing
-        run: |
-          python3 scripts/patch-signing.py
-          echo "--- Verifying patch ---"
-          grep "signingConfig " android/app/build.gradle
-          echo "Expected: line 1 = signingConfigs.debug (debug build), line 2 = signingConfigs.release (release build)"
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/camorent-upload-key.keystore
+          echo "Keystore decoded successfully"
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
@@ -84,21 +76,60 @@ jobs:
           echo "CAMORENT_UPLOAD_KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> android/gradle.properties
           echo "CAMORENT_UPLOAD_STORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> android/gradle.properties
           echo "CAMORENT_UPLOAD_KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> android/gradle.properties
-          echo "✅ Gradle CI configuration and signing credentials added"
+          echo "Gradle CI configuration and signing credentials added"
 
-      - name: Build AAB (Android App Bundle)
+      - name: Build Android App Bundle (AAB)
         run: |
           cd android
-          ./gradlew clean bundleRelease --stacktrace --no-daemon --max-workers=2
+          ./gradlew bundleRelease --no-daemon --max-workers=2
         env:
           NODE_ENV: 'production'
           NODE_OPTIONS: '--max-old-space-size=8192'
-          GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx4096m -XX:MaxMetaspaceSize=1024m"'
 
-      - name: Verify signing
+      - name: Verify 16KB alignment in AAB
         run: |
-          echo "--- Checking AAB signing ---"
-          jarsigner -verify android/app/build/outputs/bundle/release/app-release.aab || true
+          python3 - << 'PYEOF'
+          import zipfile, struct, sys, os
+
+          aab_path = "android/app/build/outputs/bundle/release/app-release.aab"
+
+          def check_alignment(data):
+              if data[:4] != b'\x7fELF' or data[4] != 2:
+                  return None
+              e_phoff = struct.unpack_from('<Q', data, 32)[0]
+              e_phentsize = struct.unpack_from('<H', data, 54)[0]
+              e_phnum = struct.unpack_from('<H', data, 56)[0]
+              min_align = float('inf')
+              for i in range(e_phnum):
+                  off = e_phoff + i * e_phentsize
+                  p_type = struct.unpack_from('<I', data, off)[0]
+                  p_align = struct.unpack_from('<Q', data, off + 48)[0]
+                  if p_type == 1 and p_align < min_align:
+                      min_align = p_align
+              return min_align if min_align != float('inf') else None
+
+          bad = []
+          ok = []
+          with zipfile.ZipFile(aab_path) as z:
+              for name in z.namelist():
+                  if name.endswith('.so') and ('arm64-v8a' in name or 'x86_64' in name):
+                      data = z.read(name)
+                      align = check_alignment(data)
+                      short = '/'.join(name.split('/')[-2:])
+                      if align is not None and align < 16384:
+                          bad.append(short)
+                          print(f"  BAD (align={align}): {short}")
+                      elif align == 16384:
+                          ok.append(short)
+                          print(f"  OK  (16KB): {short}")
+
+          print(f"\nResult: {len(ok)} OK, {len(bad)} BAD")
+          if bad:
+              print("FAIL: Some .so files are not 16KB aligned")
+              sys.exit(1)
+          else:
+              print("PASS: All 64-bit .so files are 16KB aligned - safe to upload to Play Store")
+          PYEOF
 
       - name: Upload AAB artifact
         uses: actions/upload-artifact@v4
@@ -106,3 +137,8 @@ jobs:
           name: app-release-aab
           path: android/app/build/outputs/bundle/release/app-release.aab
           retention-days: 30
+
+      - name: Build summary
+        run: |
+          echo "Android AAB build completed successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "Download the AAB from the Artifacts section above." >> $GITHUB_STEP_SUMMARY
