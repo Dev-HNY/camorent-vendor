@@ -38,24 +38,39 @@ jobs:
       - name: Generate Android project
         run: npx expo prebuild --platform android --clean
 
-      - name: Patch expo-modules-core for 16KB page size support
+      - name: Patch native modules for 16KB page size support
         run: |
           python3 - << 'PYEOF'
-          import os
-          cmake_file = "node_modules/expo-modules-core/android/CMakeLists.txt"
-          with open(cmake_file, "r") as f:
-              content = f.read()
-          if "max-page-size" in content:
-              print("Already patched")
-          else:
-              patch = "\n# 16KB page size support (Android 15+)\nif(ANDROID)\n  target_link_options(${PACKAGE_NAME} PRIVATE \"-Wl,-z,max-page-size=16384\")\nendif()\n"
-              with open(cmake_file, "a") as f:
-                  f.write(patch)
-              print("Patched CMakeLists.txt successfully")
+          # Patches CMakeLists.txt files to add 16KB page alignment linker flag.
+          # Each entry: (cmake_file_path, target_name)
+          patches = [
+              (
+                  "node_modules/expo-modules-core/android/CMakeLists.txt",
+                  "${PACKAGE_NAME}",
+              ),
+              (
+                  "node_modules/expo-av/android/CMakeLists.txt",
+                  "${PACKAGE_NAME}",
+              ),
+              (
+                  "node_modules/react-native-reanimated/android/src/main/cpp/reanimated/CMakeLists.txt",
+                  "reanimated",
+              ),
+              (
+                  "node_modules/react-native-reanimated/android/src/main/cpp/worklets/CMakeLists.txt",
+                  "worklets",
+              ),
+          ]
+          for cmake_file, target in patches:
               with open(cmake_file, "r") as f:
-                  lines = f.readlines()
-              print("Last 6 lines:")
-              print("".join(lines[-6:]))
+                  content = f.read()
+              if "max-page-size" in content:
+                  print(f"Already patched: {cmake_file}")
+              else:
+                  patch = f"\n# 16KB page size support (Android 15+)\nif(ANDROID)\n  target_link_options({target} PRIVATE \"-Wl,-z,max-page-size=16384\")\nendif()\n"
+                  with open(cmake_file, "a") as f:
+                      f.write(patch)
+                  print(f"Patched: {cmake_file}")
           PYEOF
 
       - name: Decode keystore from secrets
