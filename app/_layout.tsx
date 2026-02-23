@@ -9,6 +9,7 @@ import { Stack, router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useUserStore } from '../src/store/userStore';
 import { useFonts } from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider } from '../src/context/ThemeContext';
 import { LanguageProvider } from '../src/context/LanguageContext';
@@ -31,6 +32,7 @@ export default function RootLayout() {
     'Geist-Medium': require('../assets/fonts/Geist-Medium.otf'),
     'Geist-SemiBold': require('../assets/fonts/Geist-SemiBold.otf'),
     'Geist-Bold': require('../assets/fonts/Geist-Bold.otf'),
+    ...Ionicons.font,
   });
 
   useEffect(() => {

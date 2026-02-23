@@ -14,7 +14,6 @@ import {
   ScrollView,
   Dimensions,
   Pressable,
-  SafeAreaView,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import Svg, { Path } from 'react-native-svg';
@@ -253,7 +252,7 @@ export default function DateSelectionScreen() {
   const calendarDays = getDaysInMonth(currentMonth, currentYear);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
       <StatusBar
         barStyle={themeMode === 'dark' ? 'light-content' : 'dark-content'}
         backgroundColor={theme.colors.background.primary}
@@ -438,7 +437,7 @@ export default function DateSelectionScreen() {
           </Animated.View>
         </View>
       </Animated.View>
-    </SafeAreaView>
+    </View>
   );
 }
 
