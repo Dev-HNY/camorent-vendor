@@ -304,7 +304,7 @@ export default function OwnerSelectionScreen() {
       {/* Floating Bottom Button */}
       {selectedOwnerId && selectedOwner && (
         <Animated.View entering={FadeInUp.delay(100).duration(500)}>
-          <View style={[styles.bottomBar, { backgroundColor: theme.colors.background.primary, borderTopColor: theme.colors.border.light }]}>
+          <View style={[styles.bottomBar, { backgroundColor: theme.colors.background.primary, borderTopColor: theme.colors.border.light, paddingBottom: insets.bottom + 16 }]}>
             <View style={styles.bottomInfo}>
             <Text style={[styles.bottomLabel, { color: theme.colors.text.secondary }]}>{t.ownerSelection.selected_owner_label}</Text>
             <Text style={[styles.bottomValue, { color: theme.colors.text.primary }]} numberOfLines={1} ellipsizeMode="tail">
