@@ -118,8 +118,6 @@ export default function LoginScreen() {
   const [contactNoError, setContactNoError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [focusedField, setFocusedField] = useState<string | null>(null);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -189,8 +187,10 @@ export default function LoginScreen() {
           // Push token registration skipped - not critical
         }
 
-        setSuccessMessage(t.login.welcome_back_vendor.replace('{name}', vendorUser.first_name || 'Vendor'));
-        setShowSuccessModal(true);
+        const gstVerified = !!vendorUser.GSTIN_no;
+        const hasAddress = !!vendorUser.address_id;
+        const route = !gstVerified ? '/verification' : !hasAddress ? '/address-setup' : '/(tabs)/home';
+        router.replace(route as any);
       } catch (error: any) {
         setErrorMessage(error.message || 'Invalid credentials. Please try again.');
         setShowErrorModal(true);
@@ -380,29 +380,6 @@ export default function LoginScreen() {
           </Animated.View>
         </ScrollView>
       </KeyboardAvoidingView>
-
-      {/* Success Modal */}
-      <SuccessModal
-        visible={showSuccessModal}
-        onClose={() => {
-          setShowSuccessModal(false);
-          // Smart routing based on user completion status
-          if (!user?.gstVerified) {
-            // User hasn't completed GST verification
-            router.replace('/verification');
-          } else if (!user?.hasAddress) {
-            // User hasn't completed address setup
-            router.replace('/address-setup');
-          } else {
-            // User has completed everything
-            router.replace('/(tabs)/home');
-          }
-        }}
-        title={t.login.success_title}
-        message={successMessage || t.login.success_message}
-        primaryButtonText={t.common.continue}
-        icon="success"
-      />
 
       {/* Error Modal */}
       <SuccessModal

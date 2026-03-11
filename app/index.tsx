@@ -98,7 +98,19 @@ export default function WelcomeScreen() {
         return;
       }
 
-      // Token exists, fetch user profile to check completion status
+      // If Zustand already has persisted user data, use it directly without a network call
+      if (user?.isVerified) {
+        if (!user.gstVerified) {
+          router.replace('/verification');
+        } else if (!user.hasAddress) {
+          router.replace('/address-setup');
+        } else {
+          router.replace('/(tabs)/home');
+        }
+        return;
+      }
+
+      // Token exists but no persisted user — fetch profile from network
       const vendorUser = await authService.getMe();
 
       // Update user store with fetched data
