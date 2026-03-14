@@ -72,9 +72,9 @@ export default function ReturnScanChallanScreen() {
 
   const handleUploadGallery = async () => {
     try {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status, accessPrivileges } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-      if (status !== 'granted') {
+      if (status !== 'granted' && accessPrivileges !== 'limited') {
         setErrorMessage('Please grant access to your photo library to upload the challan.');
         setShowPermissionError(true);
         return;

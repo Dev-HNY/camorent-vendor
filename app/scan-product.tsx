@@ -74,9 +74,9 @@ export default function ScanProductScreen() {
 
   const handleChooseFiles = async () => {
     try {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status, accessPrivileges } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-      if (status !== 'granted') {
+      if (status !== 'granted' && accessPrivileges !== 'limited') {
         setErrorMessage(t.scanProduct.grantPhotoAccess);
         setShowPermissionError(true);
         return;

@@ -339,14 +339,14 @@ export default function SettleYourOrder() {
   };
 
   const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
+    const { status, accessPrivileges } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted' && accessPrivileges !== 'limited') {
       Alert.alert(t.settlement.permissionDenied, t.settlement.cameraRollPermissionNeeded);
       return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: false,
       quality: 0.8,
     });
