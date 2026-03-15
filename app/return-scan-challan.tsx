@@ -64,22 +64,15 @@ export default function ReturnScanChallanScreen() {
         }
         navigateToOTP();
       }
-    } catch (error) {
-      setErrorMessage('Failed to open camera. Please try again or use gallery instead.');
+    } catch (error: any) {
+      setErrorMessage(`Failed to open camera: ${error?.message || String(error)}`);
       setShowError(true);
     }
   };
 
   const handleUploadGallery = async () => {
     try {
-      const { status, accessPrivileges } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (status !== 'granted' && accessPrivileges !== 'limited') {
-        setErrorMessage('Please grant access to your photo library to upload the challan.');
-        setShowPermissionError(true);
-        return;
-      }
-
+      // System photo picker on Android 13+ requires no permissions
       const result = await ImagePicker.launchImageLibraryAsync({
         quality: 0.8,
         allowsEditing: true,
@@ -96,8 +89,8 @@ export default function ReturnScanChallanScreen() {
         }
         navigateToOTP();
       }
-    } catch (error) {
-      setErrorMessage('Failed to open gallery. Please try again.');
+    } catch (error: any) {
+      setErrorMessage(`Failed to open gallery: ${error?.message || String(error)}`);
       setShowError(true);
     }
   };

@@ -74,14 +74,7 @@ export default function ScanProductScreen() {
 
   const handleChooseFiles = async () => {
     try {
-      const { status, accessPrivileges } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (status !== 'granted' && accessPrivileges !== 'limited') {
-        setErrorMessage(t.scanProduct.grantPhotoAccess);
-        setShowPermissionError(true);
-        return;
-      }
-
+      // System photo picker on Android 13+ requires no permissions
       const result = await ImagePicker.launchImageLibraryAsync({
         allowsMultipleSelection: true,
         quality: 0.8,
@@ -96,8 +89,8 @@ export default function ScanProductScreen() {
           return combined.slice(0, requiredImageCount);
         });
       }
-    } catch (error) {
-      setErrorMessage(t.scanProduct.failedToOpenGallery);
+    } catch (error: any) {
+      setErrorMessage(`${t.scanProduct.failedToOpenGallery}: ${error?.message || String(error)}`);
       setShowError(true);
     }
   };

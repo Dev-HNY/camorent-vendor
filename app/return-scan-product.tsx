@@ -72,14 +72,7 @@ export default function ReturnScanProductScreen() {
 
   const handleChooseFiles = async () => {
     try {
-      const { status, accessPrivileges } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (status !== 'granted' && accessPrivileges !== 'limited') {
-        setErrorMessage(t.returnScanProduct.grantPhotoAccess);
-        setShowPermissionError(true);
-        return;
-      }
-
+      // System photo picker on Android 13+ requires no permissions
       const result = await ImagePicker.launchImageLibraryAsync({
         allowsMultipleSelection: true,
         quality: 0.8,
@@ -90,8 +83,8 @@ export default function ReturnScanProductScreen() {
         const fileUris = result.assets.map(asset => asset.uri);
         setSelectedFiles(prev => [...prev, ...fileUris]);
       }
-    } catch (error) {
-      setErrorMessage(t.returnScanProduct.failedToOpenGallery);
+    } catch (error: any) {
+      setErrorMessage(`${t.returnScanProduct.failedToOpenGallery}: ${error?.message || String(error)}`);
       setShowError(true);
     }
   };
