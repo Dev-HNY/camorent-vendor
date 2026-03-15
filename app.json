@@ -50,7 +50,8 @@
           }
         }
       ],
-      "./plugins/withAndroidNdk27.js"
+      "./plugins/withAndroidNdk27.js",
+      "./plugins/withMediaPermissions.js"
     ],
     "android": {
       "adaptiveIcon": {
@@ -58,7 +59,7 @@
         "backgroundColor": "#565caa"
       },
       "package": "com.camorentvendor.app",
-      "versionCode": 21,
+      "versionCode": 22,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.POST_NOTIFICATIONS",
