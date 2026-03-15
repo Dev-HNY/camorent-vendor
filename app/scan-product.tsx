@@ -89,8 +89,8 @@ export default function ScanProductScreen() {
           return combined.slice(0, requiredImageCount);
         });
       }
-    } catch (error: any) {
-      setErrorMessage(`${t.scanProduct.failedToOpenGallery}: ${error?.message || String(error)}`);
+    } catch (error) {
+      setErrorMessage(t.scanProduct.failedToOpenGallery);
       setShowError(true);
     }
   };

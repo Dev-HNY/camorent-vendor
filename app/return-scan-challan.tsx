@@ -89,8 +89,8 @@ export default function ReturnScanChallanScreen() {
         }
         navigateToOTP();
       }
-    } catch (error: any) {
-      setErrorMessage(`Failed to open gallery: ${error?.message || String(error)}`);
+    } catch (error) {
+      setErrorMessage('Failed to open gallery. Please try again.');
       setShowError(true);
     }
   };

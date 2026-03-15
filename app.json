@@ -50,8 +50,7 @@
           }
         }
       ],
-      "./plugins/withAndroidNdk27.js",
-      "./plugins/withMediaPermissions.js"
+      "./plugins/withAndroidNdk27.js"
     ],
     "android": {
       "adaptiveIcon": {
@@ -59,7 +58,7 @@
         "backgroundColor": "#565caa"
       },
       "package": "com.camorentvendor.app",
-      "versionCode": 22,
+      "versionCode": 23,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.POST_NOTIFICATIONS",
@@ -71,7 +70,11 @@
       "blockedPermissions": [
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
       ]
     },
     "extra": {

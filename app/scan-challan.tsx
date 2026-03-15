@@ -66,21 +66,14 @@ export default function ScanChallanScreen() {
         }
         navigateToOTP();
       }
-    } catch (error: any) {
-      setErrorMessage(`Failed to open camera: ${error?.message || String(error)}`);
+    } catch (error) {
+      setErrorMessage('Failed to open camera. Please try again or use gallery instead.');
       setShowError(true);
     }
   };
 
   const handleUploadGallery = async () => {
     try {
-      const { status, accessPrivileges } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted' && accessPrivileges !== 'limited') {
-        setErrorMessage(`Permission denied. Status: ${status}, Access: ${accessPrivileges}`);
-        setShowPermissionError(true);
-        return;
-      }
-
       const result = await ImagePicker.launchImageLibraryAsync({
         quality: 0.8,
         allowsEditing: true,
@@ -97,8 +90,8 @@ export default function ScanChallanScreen() {
         }
         navigateToOTP();
       }
-    } catch (error: any) {
-      setErrorMessage(`Failed to open gallery: ${error?.message || String(error)}`);
+    } catch (error) {
+      setErrorMessage('Failed to open gallery. Please try again.');
       setShowError(true);
     }
   };

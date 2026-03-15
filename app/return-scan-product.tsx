@@ -83,8 +83,8 @@ export default function ReturnScanProductScreen() {
         const fileUris = result.assets.map(asset => asset.uri);
         setSelectedFiles(prev => [...prev, ...fileUris]);
       }
-    } catch (error: any) {
-      setErrorMessage(`${t.returnScanProduct.failedToOpenGallery}: ${error?.message || String(error)}`);
+    } catch (error) {
+      setErrorMessage(t.returnScanProduct.failedToOpenGallery);
       setShowError(true);
     }
   };
