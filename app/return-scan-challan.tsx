@@ -72,11 +72,12 @@ export default function ReturnScanChallanScreen() {
 
   const handleUploadGallery = async () => {
     try {
-      // System photo picker on Android 13+ requires no permissions
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
       const result = await ImagePicker.launchImageLibraryAsync({
         quality: 0.8,
         allowsEditing: true,
         aspect: [4, 3],
+        legacy: true,
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {

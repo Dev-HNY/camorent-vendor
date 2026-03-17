@@ -339,11 +339,12 @@ export default function SettleYourOrder() {
   };
 
   const pickImage = async () => {
-    // System photo picker on Android 13+ requires no permissions
+    await ImagePicker.requestMediaLibraryPermissionsAsync();
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: false,
       quality: 0.8,
+      legacy: true,
     });
 
     if (!result.canceled && result.assets[0]) {

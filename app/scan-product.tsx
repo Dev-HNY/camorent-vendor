@@ -74,11 +74,12 @@ export default function ScanProductScreen() {
 
   const handleChooseFiles = async () => {
     try {
-      // System photo picker on Android 13+ requires no permissions
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
       const result = await ImagePicker.launchImageLibraryAsync({
         allowsMultipleSelection: true,
         quality: 0.8,
         selectionLimit: requiredImageCount,
+        legacy: true,
       });
 
       if (!result.canceled && result.assets) {
