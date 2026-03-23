@@ -339,7 +339,11 @@ export default function SettleYourOrder() {
   };
 
   const pickImage = async () => {
-    await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted && permission.accessPrivileges === 'none') {
+      Alert.alert(t.settlement.permissionDenied, t.settlement.cameraRollPermissionNeeded);
+      return;
+    }
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: false,

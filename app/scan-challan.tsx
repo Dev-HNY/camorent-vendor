@@ -74,7 +74,12 @@ export default function ScanChallanScreen() {
 
   const handleUploadGallery = async () => {
     try {
-      await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!permission.granted && permission.accessPrivileges === 'none') {
+        setErrorMessage('Please grant photo access in Settings to upload images.');
+        setShowPermissionError(true);
+        return;
+      }
       const result = await ImagePicker.launchImageLibraryAsync({
         quality: 0.8,
         allowsEditing: true,
