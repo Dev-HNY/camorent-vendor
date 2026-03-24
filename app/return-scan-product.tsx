@@ -82,7 +82,6 @@ export default function ReturnScanProductScreen() {
         allowsMultipleSelection: true,
         quality: 0.8,
         selectionLimit: 10,
-        legacy: true,
       });
 
       if (!result.canceled && result.assets) {

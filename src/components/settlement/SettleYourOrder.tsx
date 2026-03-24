@@ -348,7 +348,6 @@ export default function SettleYourOrder() {
       mediaTypes: ['images'],
       allowsEditing: false,
       quality: 0.8,
-      legacy: true,
     });
 
     if (!result.canceled && result.assets[0]) {

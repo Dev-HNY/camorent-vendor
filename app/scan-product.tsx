@@ -84,7 +84,6 @@ export default function ScanProductScreen() {
         allowsMultipleSelection: true,
         quality: 0.8,
         selectionLimit: requiredImageCount,
-        legacy: true,
       });
 
       if (!result.canceled && result.assets) {

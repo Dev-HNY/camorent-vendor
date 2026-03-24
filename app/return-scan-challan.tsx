@@ -64,8 +64,8 @@ export default function ReturnScanChallanScreen() {
         }
         navigateToOTP();
       }
-    } catch (error: any) {
-      setErrorMessage(`Failed to open camera: ${error?.message || String(error)}`);
+    } catch (error) {
+      setErrorMessage('Failed to open camera. Please try again or use gallery instead.');
       setShowError(true);
     }
   };
@@ -82,7 +82,6 @@ export default function ReturnScanChallanScreen() {
         quality: 0.8,
         allowsEditing: true,
         aspect: [4, 3],
-        legacy: true,
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {

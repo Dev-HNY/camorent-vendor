@@ -84,7 +84,6 @@ export default function ScanChallanScreen() {
         quality: 0.8,
         allowsEditing: true,
         aspect: [4, 3],
-        legacy: true,
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
