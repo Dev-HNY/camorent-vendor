@@ -50,8 +50,6 @@ export default function ReturnScanChallanScreen() {
 
       const result = await ImagePicker.launchCameraAsync({
         quality: 0.8,
-        allowsEditing: true,
-        aspect: [4, 3],
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
@@ -80,8 +78,6 @@ export default function ReturnScanChallanScreen() {
       }
       const result = await ImagePicker.launchImageLibraryAsync({
         quality: 0.8,
-        allowsEditing: true,
-        aspect: [4, 3],
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
