@@ -58,7 +58,7 @@
         "backgroundColor": "#565caa"
       },
       "package": "com.camorentvendor.app",
-      "versionCode": 29,
+      "versionCode": 30,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.POST_NOTIFICATIONS",

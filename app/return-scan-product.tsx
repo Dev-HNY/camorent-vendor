@@ -89,7 +89,8 @@ export default function ReturnScanProductScreen() {
         setSelectedFiles(prev => [...prev, ...fileUris]);
       }
     } catch (error) {
-      setErrorMessage(t.returnScanProduct.failedToOpenGallery);
+      const msg = error instanceof Error ? error.message : String(error);
+      setErrorMessage(`Gallery error: ${msg}`);
       setShowError(true);
     }
   };
@@ -114,7 +115,8 @@ export default function ReturnScanProductScreen() {
         setSelectedFiles(prev => [...prev, ...fileUris]);
       }
     } catch (error) {
-      setErrorMessage(t.returnScanProduct.failedToOpenCamera);
+      const msg = error instanceof Error ? error.message : String(error);
+      setErrorMessage(`Camera error: ${msg}`);
       setShowError(true);
     }
   };

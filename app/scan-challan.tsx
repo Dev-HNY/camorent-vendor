@@ -65,7 +65,8 @@ export default function ScanChallanScreen() {
         navigateToOTP();
       }
     } catch (error) {
-      setErrorMessage('Failed to open camera. Please try again or use gallery instead.');
+      const msg = error instanceof Error ? error.message : String(error);
+      setErrorMessage(`Camera error: ${msg}`);
       setShowError(true);
     }
   };
@@ -93,7 +94,8 @@ export default function ScanChallanScreen() {
         navigateToOTP();
       }
     } catch (error) {
-      setErrorMessage('Failed to open gallery. Please try again.');
+      const msg = error instanceof Error ? error.message : String(error);
+      setErrorMessage(`Gallery error: ${msg}`);
       setShowError(true);
     }
   };

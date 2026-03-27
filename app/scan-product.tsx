@@ -95,7 +95,8 @@ export default function ScanProductScreen() {
         });
       }
     } catch (error) {
-      setErrorMessage(t.scanProduct.failedToOpenGallery);
+      const msg = error instanceof Error ? error.message : String(error);
+      setErrorMessage(`Gallery error: ${msg}`);
       setShowError(true);
     }
   };
@@ -124,7 +125,8 @@ export default function ScanProductScreen() {
         });
       }
     } catch (error) {
-      setErrorMessage(t.scanProduct.failedToOpenCamera);
+      const msg = error instanceof Error ? error.message : String(error);
+      setErrorMessage(`Camera error: ${msg}`);
       setShowError(true);
     }
   };
